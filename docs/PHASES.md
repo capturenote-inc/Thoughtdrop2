@@ -1,11 +1,17 @@
 # PHASES.md — ThoughtDrop MVP
 
 ```
-version: 1.0
+version: 1.1
 status: approved
 inputs: SPEC.md v1.4, DESIGN.md v1.0
 consumer: Claude Code (one phase per brief; do not start a phase until the
   previous phase's verification passes)
+progress:
+  - Phase 0: DONE, verified by Bryan on production 2026-07-09
+  - Phase 1: IN PROGRESS (Claude Code). Gemini review of migrations, RLS,
+    and lib/routing.ts scheduled at Phase 1 completion, before Phase 2.
+  - Parallel: Claude Design session for the four surfaces (page view, top
+    bar, Inbox, capture modal); handoff bundle feeds Phase 2/3 briefs.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
