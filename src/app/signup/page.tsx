@@ -24,7 +24,7 @@ export default function SignupPage() {
             name="email"
             type="email"
             required
-            className="rounded-md border border-zinc-300 px-3 py-2 text-sm"
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -37,7 +37,7 @@ export default function SignupPage() {
             type="password"
             required
             minLength={6}
-            className="rounded-md border border-zinc-300 px-3 py-2 text-sm"
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900"
           />
         </div>
         {state?.error && (
