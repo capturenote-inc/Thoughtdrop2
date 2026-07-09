@@ -8,8 +8,11 @@ consumer: Claude Code (one phase per brief; do not start a phase until the
   previous phase's verification passes)
 progress:
   - Phase 0: DONE, verified by Bryan on production 2026-07-09
-  - Phase 1: IN PROGRESS (Claude Code). Gemini review of migrations, RLS,
-    and lib/routing.ts scheduled at Phase 1 completion, before Phase 2.
+  - Phase 1: CODE COMPLETE (2026-07-09). Gemini review done, 5 findings,
+    all accepted (see docs/reviews/phase1-gemini-findings.md). Consolidated
+    fix brief at docs/reviews/phase1-fixlist.md (6 items incl. advisor
+    warnings). Phase 2 gated on: fix list merged, CI green, zero security
+    advisors, leaked-password toggle on.
   - Parallel: Claude Design session for the four surfaces (page view, top
     bar, Inbox, capture modal); handoff bundle feeds Phase 2/3 briefs.
 ```
@@ -109,4 +112,6 @@ progress:
 ## Post-MVP log
 
 - Persisted "pinned open" notes drawer state (DESIGN D1 tension).
+- Move/re-parent existing pages (blocked at DB level in MVP; see
+  phase1-fixlist.md item 3).
 - Everything in SPEC.md non-goals.

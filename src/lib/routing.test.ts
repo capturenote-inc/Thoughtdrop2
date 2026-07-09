@@ -23,6 +23,12 @@ describe("parseTags", () => {
     expect(parseTags("see https://example.com#section for details")).toEqual([]);
   });
 
+  it("does not match a tag immediately preceded by punctuation", () => {
+    expect(parseTags("hello.#tag")).toEqual([]);
+    expect(parseTags("hello,#tag")).toEqual([]);
+    expect(parseTags("(#tag)")).toEqual([]);
+  });
+
   it("is case-insensitive and stores tags lowercase", () => {
     expect(parseTags("#FooBar")).toEqual([{ tag: "foobar", index: 0 }]);
   });
