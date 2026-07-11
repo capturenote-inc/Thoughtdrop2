@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Geist+Mono:wght@400;500&family=Spline+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#EFECE5;font-family:system-ui,sans-serif}a{color:#9A5B0F}a:hover{color:#C2701A}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:8px;overflow:hidden}.dv-opt:target .dv-oid{background:#C2701A;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Paper Quiet (1a) applied to all four surfaces — 1440px, fluid to 1280px</span></div>
+<div class="dv-opts">
+
+<!-- ============ 2a PAGE VIEW ============ -->
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Page view — expanded drawer, 3 columns with all block types; collapsed state below</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="dv-card" style="width:1440px" data-screen-label="2a Page view expanded">
+<div style="background:#FBFAF7;color:#21201C;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
+  <!-- top bar -->
+  <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:13px;color:#6E6A61">
+      <span style="color:#21201C;font-weight:500">Pages</span><span>Tasks</span>
+      <span style="display:flex;align-items:center;gap:6px">Inbox<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#F8ECDA;color:#96590F;padding:1px 6px;border-radius:9px">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:260px;height:28px;padding:0 10px;border:1px solid #E9E5DC;border-radius:6px;color:#A6A198;font-size:12.5px"><span>Search</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#C4BFB4">/</span></div>
+    <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:13px;font-weight:600">Create Note<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘N</span></div>
+  </div>
+  <!-- page header -->
+  <div style="padding:36px 40px 0;display:flex;align-items:baseline;gap:14px">
+    <span style="font-size:12px;color:#A6A198">Growth /</span>
+    <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.02em">Marketing</h1>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F8ECDA;color:#96590F;padding:2px 9px;border-radius:11px">#marketing</span>
+  </div>
+  <!-- drawer expanded -->
+  <div style="margin:20px 40px 0;border-top:1px solid #E9E5DC;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:10px;height:36px;font-size:12.5px;color:#6E6A61;cursor:default"><span style="font-size:9px;color:#A6A198">▼</span><span style="font-weight:500;color:#21201C">Notes</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A6A198">(7)</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1;line-height:1.45">Q3 launch email needs a plain-text variant — deliverability dip on Gmail <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">2m</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1;line-height:1.45">Ask Dana for the podcast sponsorship numbers before Thursday <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">1h</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1;line-height:1.45">Idea: retarget churned trials with the case-study sequence <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A6A198">#ideas</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Tue</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+  </div>
+  <!-- canvas -->
+  <div style="display:flex;gap:0;padding:28px 40px 48px">
+    <div style="width:38%;padding-right:32px">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Positioning draft</div>
+      <div style="font-size:13.5px;line-height:1.6;color:#3B3830">
+        <p style="margin:0 0 10px"><strong>ThoughtDrop for teams</strong> is the working headline. The narrow-canvas complaint tested strongest in interviews — lead with width, not AI.</p>
+        <p style="margin:0 0 10px">Second message: capture without filing. Every competitor demo starts with “create a page” — ours starts with typing.</p>
+        <p style="margin:0">Draft the comparison table against the top three tools before the copy review on Friday.</p>
+      </div>
+    </div>
+    <div style="width:9px;margin:0 -4px;display:flex;justify-content:center;cursor:col-resize"><div style="width:1px;background:#E9E5DC"></div></div>
+    <div style="width:34%;padding:0 32px">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Launch tasks</div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px"><span style="width:14px;height:14px;border:1.5px solid #C4BFB4;border-radius:4px;flex:none"></span><span style="flex:1">Finalize pricing page copy</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#96590F">P1</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Jul 11</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px"><span style="width:14px;height:14px;border:1.5px solid #C2701A;border-radius:4px;background:#F8ECDA;flex:none"></span><span style="flex:1">Brief the design freelancer</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">P2</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Jul 14</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13.5px;color:#A6A198"><span style="width:14px;height:14px;border-radius:4px;background:#C2701A;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;text-decoration:line-through">Book launch-week newsletter slot</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px">P3</span></div>
+        <div style="padding:8px 0 0;font-size:12.5px;color:#A6A198">+ Add task</div>
+      </div>
+    </div>
+    <div style="width:9px;margin:0 -4px;display:flex;justify-content:center;cursor:col-resize"><div style="width:1px;background:#E9E5DC"></div></div>
+    <div style="width:28%;padding-left:32px">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Channel spend</div>
+      <div style="font-size:12.5px">
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #E9E5DC;color:#A6A198;font-size:11px;font-weight:500"><span style="flex:1.4">Channel</span><span style="flex:1;text-align:right">Jun</span><span style="flex:1;text-align:right">Jul</span></div>
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #F1EEE6"><span style="flex:1.4">Search</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">4,200</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">4,800</span></div>
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #F1EEE6"><span style="flex:1.4">Podcast</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">2,000</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">2,000</span></div>
+        <div style="display:flex;padding:6px 0"><span style="flex:1.4">Newsletter</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">850</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">1,200</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- collapsed drawer state -->
+<div class="dv-card" style="width:1440px" data-screen-label="2a Page view collapsed drawer">
+<div style="background:#FBFAF7;color:#21201C;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;padding-bottom:26px">
+  <div style="padding:36px 40px 0;display:flex;align-items:baseline;gap:14px">
+    <span style="font-size:12px;color:#A6A198">Growth /</span>
+    <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.02em">Marketing</h1>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F8ECDA;color:#96590F;padding:2px 9px;border-radius:11px">#marketing</span>
+  </div>
+  <div style="margin:20px 40px 0;border-top:1px solid #E9E5DC;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:10px;height:36px;font-size:12.5px;color:#6E6A61"><span style="font-size:9px;color:#A6A198">▶</span><span style="font-weight:500;color:#21201C">Notes</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A6A198">(7)</span></div>
+  </div>
+  <div style="padding:14px 40px 0;font-size:11.5px;color:#A6A198">Collapsed (default). Canvas begins directly below — one 36px bar of cost.</div>
+</div>
+</div>
+</div></div>
+
+<!-- ============ 2b TOP BAR ============ -->
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Top bar — Create Note is the only filled element on the surface</div>
+<div class="dv-card" style="width:1440px" data-screen-label="2b Top bar">
+<div style="background:#FBFAF7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#21201C">
+  <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:13px;color:#6E6A61">
+      <span style="color:#21201C;font-weight:500">Pages</span>
+      <span>Tasks</span>
+      <span style="display:flex;align-items:center;gap:6px">Inbox<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#F8ECDA;color:#96590F;padding:1px 6px;border-radius:9px">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:260px;height:28px;padding:0 10px;border:1px solid #E9E5DC;border-radius:6px;color:#A6A198;font-size:12.5px"><span>Search</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#C4BFB4">/</span></div>
+    <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:13px;font-weight:600">Create Note<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘N</span></div>
+  </div>
+  <div style="display:flex;gap:28px;padding:12px 24px 16px;font-size:11.5px;color:#A6A198;line-height:1.5">
+    <span>Logo = home. Active nav item darkens; no underlines, no icons.</span>
+    <span>Inbox badge appears only when count &gt; 0.</span>
+    <span>Create Note: the sole filled-amber element, pinned far right, visible on every screen. ⌘N everywhere.</span>
+  </div>
+</div>
+</div></div>
+
+<!-- ============ 2c INBOX ============ -->
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Inbox — all three row states, triage inline (D2)</div>
+<div class="dv-card" style="width:1440px" data-screen-label="2c Inbox">
+<div style="background:#FBFAF7;color:#21201C;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
+  <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:13px;color:#6E6A61">
+      <span>Pages</span><span>Tasks</span>
+      <span style="display:flex;align-items:center;gap:6px;color:#21201C;font-weight:500">Inbox<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#F8ECDA;color:#96590F;padding:1px 6px;border-radius:9px">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:260px;height:28px;padding:0 10px;border:1px solid #E9E5DC;border-radius:6px;color:#A6A198;font-size:12.5px"><span>Search</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#C4BFB4">/</span></div>
+    <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:13px;font-weight:600">Create Note<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘N</span></div>
+  </div>
+  <div style="padding:36px 40px 8px;display:flex;align-items:baseline;gap:12px">
+    <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.02em">Inbox</h1>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A6A198">4 untriaged</span>
+  </div>
+  <div style="margin:14px 40px 48px;border-top:1px solid #E9E5DC">
+    <!-- state 1: unmatched routing tag -->
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px">
+      <span style="flex:1;line-height:1.5">Sketch the onboarding checklist for the beta cohort <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px;border:1px dashed #E0B072">#onboarding</span> <span style="font-size:11.5px;color:#A6A198">— no page owns this tag</span></span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">9m</span>
+      <span style="display:flex;align-items:center;height:26px;padding:0 11px;border:1px solid #C2701A;color:#96590F;border-radius:6px;font-size:12px;font-weight:500">Create #onboarding</span>
+      <span style="display:flex;align-items:center;height:26px;padding:0 11px;border:1px solid #E9E5DC;color:#6E6A61;border-radius:6px;font-size:12px">Fix tag</span>
+    </div>
+    <!-- state 2: untagged, idle -->
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px">
+      <span style="flex:1;line-height:1.5">Pull the churn numbers before the pricing call — Sarah mentioned the annual plan dip</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">1h</span>
+      <span style="display:flex;align-items:center;height:26px;padding:0 11px;border:1px solid #E9E5DC;color:#6E6A61;border-radius:6px;font-size:12px">Suggest tag</span>
+    </div>
+    <!-- state 3: untagged, suggestion returned -->
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px;background:#FDFBF5">
+      <span style="flex:1;line-height:1.5">Reading list: that essay on tools-for-thought interfaces from the weekend</span>
+      <span style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11.5px;color:#A6A198">Suggested</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#reading</span>
+        <span style="display:flex;align-items:center;justify-content:center;height:26px;width:26px;background:#C2701A;color:#fff;border-radius:6px;font-size:12px">✓</span>
+        <span style="display:flex;align-items:center;justify-content:center;height:26px;width:26px;border:1px solid #E9E5DC;color:#A6A198;border-radius:6px;font-size:12px">✕</span>
+      </span>
+    </div>
+    <!-- extra: another plain row for rhythm -->
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px">
+      <span style="flex:1;line-height:1.5">Renew the domain before it lapses this time</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Tue</span>
+      <span style="display:flex;align-items:center;height:26px;padding:0 11px;border:1px solid #E9E5DC;color:#6E6A61;border-radius:6px;font-size:12px">Suggest tag</span>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============ 2d CAPTURE MODAL ============ -->
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Capture modal — empty and filled; typed #tag lights up live</div>
+<div style="display:flex;gap:14px">
+<div class="dv-card" style="width:713px" data-screen-label="2d Capture empty">
+<div style="background:#FBFAF7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;position:relative;height:420px;overflow:hidden">
+  <!-- dimmed page behind -->
+  <div style="opacity:.35;pointer-events:none">
+    <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600">ThoughtDrop</span><div style="flex:1"></div><div style="height:30px;width:110px;background:#C2701A;border-radius:6px"></div></div>
+    <div style="padding:30px 32px"><div style="height:20px;width:160px;background:#E9E5DC;border-radius:4px"></div><div style="margin-top:18px;height:1px;background:#E9E5DC"></div><div style="margin-top:18px;height:10px;width:70%;background:#F1EEE6;border-radius:4px"></div><div style="margin-top:8px;height:10px;width:55%;background:#F1EEE6;border-radius:4px"></div></div>
+  </div>
+  <div style="position:absolute;inset:0;background:rgba(33,32,28,.18)"></div>
+  <!-- modal -->
+  <div style="position:absolute;left:50%;top:72px;transform:translateX(-50%);width:520px;background:#FFFEFB;border:1px solid #E0DCD2;border-radius:10px;overflow:hidden">
+    <div style="padding:18px 20px 0;min-height:150px;font-size:14.5px;line-height:1.6;color:#C4BFB4">Type a thought… a #tag files it for you<span style="display:inline-block;width:1.5px;height:17px;background:#C2701A;vertical-align:text-bottom;margin-left:1px"></span></div>
+    <div style="display:flex;align-items:center;padding:10px 20px 14px;font-size:11.5px;color:#A6A198">
+      <span>No tag? It lands in your Inbox.</span>
+      <div style="flex:1"></div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;margin-right:14px">esc</span>
+      <span style="display:flex;align-items:center;gap:7px;height:28px;padding:0 13px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:12.5px;font-weight:600">Save<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘↵</span></span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="dv-card" style="width:713px" data-screen-label="2d Capture filled">
+<div style="background:#FBFAF7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;position:relative;height:420px;overflow:hidden">
+  <div style="opacity:.35;pointer-events:none">
+    <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600">ThoughtDrop</span><div style="flex:1"></div><div style="height:30px;width:110px;background:#C2701A;border-radius:6px"></div></div>
+    <div style="padding:30px 32px"><div style="height:20px;width:160px;background:#E9E5DC;border-radius:4px"></div><div style="margin-top:18px;height:1px;background:#E9E5DC"></div><div style="margin-top:18px;height:10px;width:70%;background:#F1EEE6;border-radius:4px"></div><div style="margin-top:8px;height:10px;width:55%;background:#F1EEE6;border-radius:4px"></div></div>
+  </div>
+  <div style="position:absolute;inset:0;background:rgba(33,32,28,.18)"></div>
+  <div style="position:absolute;left:50%;top:72px;transform:translateX(-50%);width:520px;background:#FFFEFB;border:1px solid #E0DCD2;border-radius:10px;overflow:hidden">
+    <div style="padding:18px 20px 0;min-height:150px;font-size:14.5px;line-height:1.6;color:#21201C">Ask Dana for the podcast sponsorship numbers before Thursday <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span> and drop them in the spend table<span style="display:inline-block;width:1.5px;height:17px;background:#C2701A;vertical-align:text-bottom;margin-left:1px"></span></div>
+    <div style="display:flex;align-items:center;padding:10px 20px 14px;font-size:11.5px;color:#A6A198">
+      <span style="display:flex;align-items:center;gap:6px;color:#6E6A61">Files to <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#F8ECDA;color:#96590F;padding:1px 6px;border-radius:8px">#marketing</span> → Marketing</span>
+      <div style="flex:1"></div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;margin-right:14px">esc</span>
+      <span style="display:flex;align-items:center;gap:7px;height:28px;padding:0 13px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:12.5px;font-weight:600">Save<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘↵</span></span>
+    </div>
+  </div>
+</div>
+</div>
+</div></div>
+
+</div>
+<p class="dv-next">First tag = routing tag; the modal footer confirms the destination live. Try: "approve all four" · "tighten Inbox rows" · "modal larger / centered lower".</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Page view — three visual directions (1440px, expanded drawer, 3 columns)</span></div>
+<div class="dv-opts">
+
+<!-- ============ 1a PAPER QUIET ============ -->
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Paper Quiet — iA-calm, chrome nearly invisible, amber only on Create + tags</div>
+<div class="dv-card" style="width:1440px" data-screen-label="1a Page view">
+<div style="background:#FBFAF7;color:#21201C;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
+  <!-- top bar -->
+  <div style="display:flex;align-items:center;gap:24px;height:48px;padding:0 24px;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;background:#C2701A;border-radius:3px"></div><span style="font-size:13.5px;font-weight:600;letter-spacing:-0.01em">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:13px;color:#6E6A61">
+      <span style="color:#21201C">Pages</span><span>Tasks</span>
+      <span style="display:flex;align-items:center;gap:6px">Inbox<span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#F8ECDA;color:#96590F;padding:1px 6px;border-radius:9px">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:260px;height:28px;padding:0 10px;border:1px solid #E9E5DC;border-radius:6px;color:#A6A198;font-size:12.5px"><span>Search</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#C4BFB4">/</span></div>
+    <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;background:#C2701A;color:#FFFDF9;border-radius:6px;font-size:13px;font-weight:600">Create Note<span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;opacity:.75">⌘N</span></div>
+  </div>
+  <!-- page header -->
+  <div style="padding:36px 40px 0;display:flex;align-items:baseline;gap:14px">
+    <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.02em">Marketing</h1>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F8ECDA;color:#96590F;padding:2px 9px;border-radius:11px">#marketing</span>
+  </div>
+  <!-- drawer expanded -->
+  <div style="margin:20px 40px 0;border-top:1px solid #E9E5DC;border-bottom:1px solid #E9E5DC">
+    <div style="display:flex;align-items:center;gap:10px;height:36px;font-size:12.5px;color:#6E6A61"><span style="font-size:9px;color:#A6A198">▼</span><span style="font-weight:500;color:#21201C">Notes</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A6A198">(7)</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1">Q3 launch email needs a plain-text variant — deliverability dip on Gmail <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">2m</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1">Ask Dana for the podcast sponsorship numbers before Thursday <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">1h</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0 8px 19px;border-top:1px solid #F1EEE6;font-size:13px"><span style="flex:1">Idea: retarget churned trials with the case-study sequence <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8ECDA;color:#96590F;padding:1px 7px;border-radius:9px">#marketing</span> <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A6A198">#ideas</span></span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Tue</span><span style="font-size:12px;color:#6E6A61">Edit</span><span style="font-size:12px;color:#6E6A61">Delete</span></div>
+  </div>
+  <!-- canvas -->
+  <div style="display:flex;gap:32px;padding:28px 40px 48px">
+    <div style="width:38%">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Positioning draft</div>
+      <div style="font-size:13.5px;line-height:1.6;color:#3B3830">
+        <p style="margin:0 0 10px"><strong>ThoughtDrop for teams</strong> is the working headline. The narrow-canvas complaint tested strongest in interviews — lead with width, not AI.</p>
+        <p style="margin:0 0 10px">Second message: capture without filing. Every competitor demo starts with “create a page” — ours starts with typing.</p>
+        <p style="margin:0">Draft the comparison table against the top three tools before the copy review on Friday.</p>
+      </div>
+    </div>
+    <div style="width:1px;background:#E9E5DC"></div>
+    <div style="width:34%">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Launch tasks</div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px"><span style="width:14px;height:14px;border:1.5px solid #C4BFB4;border-radius:4px"></span><span style="flex:1">Finalize pricing page copy</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#96590F">P1</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Jul 11</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F1EEE6;font-size:13.5px"><span style="width:14px;height:14px;border:1.5px solid #C2701A;border-radius:4px;background:#F8ECDA"></span><span style="flex:1">Brief the design freelancer</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">P2</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#A6A198">Jul 14</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13.5px;color:#A6A198"><span style="width:14px;height:14px;border-radius:4px;background:#C2701A;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center">✓</span><span style="flex:1;text-decoration:line-through">Book launch-week newsletter slot</span><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px">P3</span></div>
+      </div>
+    </div>
+    <div style="width:1px;background:#E9E5DC"></div>
+    <div style="width:28%">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:#A6A198;margin-bottom:10px">Channel spend</div>
+      <div style="font-size:12.5px">
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #E9E5DC;color:#A6A198;font-size:11px;font-weight:500"><span style="flex:1.4">Channel</span><span style="flex:1;text-align:right">Jun</span><span style="flex:1;text-align:right">Jul</span></div>
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #F1EEE6"><span style="flex:1.4">Search</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">4,200</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">4,800</span></div>
+        <div style="display:flex;padding:6px 0;border-bottom:1px solid #F1EEE6"><span style="flex:1.4">Podcast</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">2,000</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">2,000</span></div>
+        <div style="display:flex;padding:6px 0"><span style="flex:1.4">Newsletter</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">850</span><span style="flex:1;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px">1,200</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============ 1b LINEAR TIGHT ============ -->
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Instrument — Linear-tight, hairline panels give columns visible structure</div>
+<div class="dv-card" style="width:1440px" data-screen-label="1b Page view">
+<div style="background:#F6F4F0;color:#1D1B17;font-family:'Instrument Sans',sans-serif">
+  <!-- top bar -->
+  <div style="display:flex;align-items:center;gap:20px;height:44px;padding:0 20px;background:#FCFBF9;border-bottom:1px solid #E3DFD6">
+    <div style="display:flex;align-items:center;gap:7px"><div style="width:15px;height:15px;border:1.5px solid #D07912;border-radius:50%;display:flex;align-items:center;justify-content:center"><div style="width:5px;height:5px;background:#D07912;border-radius:50%"></div></div><span style="font-size:13px;font-weight:600">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:2px;font-size:12.5px;color:#75705F">
+      <span style="padding:4px 9px;background:#F0EDE5;border-radius:5px;color:#1D1B17;font-weight:500">Pages</span>
+      <span style="padding:4px 9px">Tasks</span>
+      <span style="padding:4px 9px;display:flex;align-items:center;gap:6px">Inbox<span style="font-family:'Geist Mono',monospace;font-size:10px;background:#D07912;color:#fff;padding:1px 5px;border-radius:8px;font-weight:500">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:240px;height:26px;padding:0 9px;background:#F0EDE5;border-radius:5px;color:#9B9585;font-size:12px"><span>Search…</span><span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:9.5px;border:1px solid #DDD8CC;border-radius:3px;padding:0 4px">/</span></div>
+    <div style="display:flex;align-items:center;gap:7px;height:28px;padding:0 12px;background:#D07912;color:#fff;border-radius:5px;font-size:12.5px;font-weight:600">+ Create Note<span style="font-family:'Geist Mono',monospace;font-size:9.5px;font-weight:400;background:rgba(255,255,255,.18);border-radius:3px;padding:1px 4px">⌘N</span></div>
+  </div>
+  <!-- page header -->
+  <div style="padding:26px 24px 0;display:flex;align-items:center;gap:12px">
+    <h1 style="margin:0;font-size:21px;font-weight:600;letter-spacing:-0.015em">Marketing</h1>
+    <span style="font-family:'Geist Mono',monospace;font-size:11px;background:#F5E7CE;color:#8F5606;padding:2px 8px;border-radius:4px">#marketing</span>
+    <span style="font-size:11.5px;color:#9B9585">Growth / Marketing</span>
+  </div>
+  <!-- drawer expanded (panel) -->
+  <div style="margin:16px 24px 0;background:#FCFBF9;border:1px solid #E3DFD6;border-radius:6px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:9px;height:32px;padding:0 12px;font-size:12px;border-bottom:1px solid #EEEAE0"><span style="font-size:8px;color:#9B9585">▼</span><span style="font-weight:600">Notes</span><span style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#9B9585">7</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;border-bottom:1px solid #F2EFE7;font-size:12.5px"><span style="flex:1">Q3 launch email needs a plain-text variant — deliverability dip on Gmail <span style="font-family:'Geist Mono',monospace;font-size:10.5px;background:#F5E7CE;color:#8F5606;padding:1px 6px;border-radius:4px">#marketing</span></span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585">2m</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Edit</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Del</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;border-bottom:1px solid #F2EFE7;font-size:12.5px"><span style="flex:1">Ask Dana for the podcast sponsorship numbers before Thursday <span style="font-family:'Geist Mono',monospace;font-size:10.5px;background:#F5E7CE;color:#8F5606;padding:1px 6px;border-radius:4px">#marketing</span></span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585">1h</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Edit</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Del</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;font-size:12.5px"><span style="flex:1">Idea: retarget churned trials with the case-study sequence <span style="font-family:'Geist Mono',monospace;font-size:10.5px;background:#F5E7CE;color:#8F5606;padding:1px 6px;border-radius:4px">#marketing</span> <span style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#9B9585">#ideas</span></span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585">Tue</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Edit</span><span style="font-size:11.5px;color:#75705F;border:1px solid #E3DFD6;border-radius:4px;padding:2px 7px">Del</span></div>
+  </div>
+  <!-- canvas: bordered panels -->
+  <div style="display:flex;gap:12px;padding:16px 24px 32px">
+    <div style="width:38%;background:#FCFBF9;border:1px solid #E3DFD6;border-radius:6px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:600;color:#75705F;margin-bottom:8px">Positioning draft</div>
+      <div style="font-size:12.5px;line-height:1.55;color:#3E3A30">
+        <p style="margin:0 0 8px"><strong>ThoughtDrop for teams</strong> is the working headline. The narrow-canvas complaint tested strongest in interviews — lead with width, not AI.</p>
+        <p style="margin:0 0 8px">Second message: capture without filing. Every competitor demo starts with “create a page” — ours starts with typing.</p>
+        <p style="margin:0">Draft the comparison table against the top three tools before the copy review on Friday.</p>
+      </div>
+    </div>
+    <div style="width:34%;background:#FCFBF9;border:1px solid #E3DFD6;border-radius:6px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:600;color:#75705F;margin-bottom:8px">Launch tasks</div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid #F2EFE7;font-size:12.5px"><span style="width:13px;height:13px;border:1.5px solid #C9C3B4;border-radius:3px"></span><span style="flex:1">Finalize pricing page copy</span><span style="font-family:'Geist Mono',monospace;font-size:10px;background:#F5E7CE;color:#8F5606;padding:1px 5px;border-radius:3px">P1</span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585">Jul 11</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid #F2EFE7;font-size:12.5px"><span style="width:13px;height:13px;border:1.5px solid #D07912;border-radius:3px;background:#F5E7CE"></span><span style="flex:1">Brief the design freelancer</span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585;border:1px solid #E3DFD6;padding:1px 5px;border-radius:3px">P2</span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#9B9585">Jul 14</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 0;font-size:12.5px;color:#9B9585"><span style="width:13px;height:13px;border-radius:3px;background:#D07912;color:#fff;font-size:8.5px;display:flex;align-items:center;justify-content:center">✓</span><span style="flex:1;text-decoration:line-through">Book launch-week newsletter slot</span><span style="font-family:'Geist Mono',monospace;font-size:10px;border:1px solid #E3DFD6;padding:1px 5px;border-radius:3px">P3</span></div>
+      </div>
+    </div>
+    <div style="width:28%;background:#FCFBF9;border:1px solid #E3DFD6;border-radius:6px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:600;color:#75705F;margin-bottom:8px">Channel spend</div>
+      <div style="font-size:12px">
+        <div style="display:flex;padding:5px 0;border-bottom:1px solid #E3DFD6;color:#9B9585;font-size:10.5px;font-weight:600"><span style="flex:1.4">Channel</span><span style="flex:1;text-align:right">Jun</span><span style="flex:1;text-align:right">Jul</span></div>
+        <div style="display:flex;padding:5px 0;border-bottom:1px solid #F2EFE7"><span style="flex:1.4">Search</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">4,200</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">4,800</span></div>
+        <div style="display:flex;padding:5px 0;border-bottom:1px solid #F2EFE7"><span style="flex:1.4">Podcast</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">2,000</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">2,000</span></div>
+        <div style="display:flex;padding:5px 0"><span style="flex:1.4">Newsletter</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">850</span><span style="flex:1;text-align:right;font-family:'Geist Mono',monospace;font-size:11px">1,200</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<!-- ============ 1c WARM THINGS ============ -->
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Warm Desk — Things-3 warmth, amber works harder, softer radii, a touch more air</div>
+<div class="dv-card" style="width:1440px" data-screen-label="1c Page view">
+<div style="background:#FAF6F0;color:#2A241C;font-family:'Spline Sans',sans-serif">
+  <!-- top bar -->
+  <div style="display:flex;align-items:center;gap:24px;height:50px;padding:0 26px;border-bottom:1px solid #EBE2D4">
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:18px;background:#C96F16;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700">T</div><span style="font-size:14px;font-weight:600;letter-spacing:-0.01em">ThoughtDrop</span></div>
+    <div style="display:flex;align-items:center;gap:22px;font-size:13px;color:#7C7466">
+      <span style="color:#2A241C;font-weight:500;border-bottom:2px solid #C96F16;padding:14px 0 12px">Pages</span><span>Tasks</span>
+      <span style="display:flex;align-items:center;gap:7px">Inbox<span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;background:#C96F16;color:#fff;padding:1px 6px;border-radius:10px">4</span></span>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;width:250px;height:30px;padding:0 12px;background:#F2EBE0;border-radius:15px;color:#A69C8B;font-size:12.5px"><span>Search</span><span style="margin-left:auto;font-family:'Spline Sans Mono',monospace;font-size:10px">/</span></div>
+    <div style="display:flex;align-items:center;gap:8px;height:32px;padding:0 16px;background:#C96F16;color:#FFF9F0;border-radius:16px;font-size:13px;font-weight:600">＋ Create Note</div>
+  </div>
+  <!-- page header -->
+  <div style="padding:34px 40px 0;display:flex;align-items:baseline;gap:14px">
+    <h1 style="margin:0;font-size:25px;font-weight:600;letter-spacing:-0.02em">Marketing</h1>
+    <span style="font-family:'Spline Sans Mono',monospace;font-size:12px;background:#F6E5CC;color:#8F5307;padding:2px 10px;border-radius:12px">#marketing</span>
+  </div>
+  <!-- drawer expanded (amber-tinted bar) -->
+  <div style="margin:18px 40px 0;border:1px solid #EBE2D4;border-radius:8px;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;height:36px;padding:0 14px;background:#F7F0E4;font-size:12.5px"><span style="font-size:9px;color:#B08A54">▼</span><span style="font-weight:600">Notes</span><span style="font-family:'Spline Sans Mono',monospace;font-size:11px;color:#8F5307">(7)</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 14px;background:#FFFDF9;border-top:1px solid #F2EBDD;font-size:13px"><span style="flex:1">Q3 launch email needs a plain-text variant — deliverability dip on Gmail <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;background:#F6E5CC;color:#8F5307;padding:1px 8px;border-radius:10px">#marketing</span></span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">2m</span><span style="font-size:12px;color:#8F5307">Edit</span><span style="font-size:12px;color:#A69C8B">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 14px;background:#FFFDF9;border-top:1px solid #F2EBDD;font-size:13px"><span style="flex:1">Ask Dana for the podcast sponsorship numbers before Thursday <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;background:#F6E5CC;color:#8F5307;padding:1px 8px;border-radius:10px">#marketing</span></span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">1h</span><span style="font-size:12px;color:#8F5307">Edit</span><span style="font-size:12px;color:#A69C8B">Delete</span></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 14px;background:#FFFDF9;border-top:1px solid #F2EBDD;font-size:13px"><span style="flex:1">Idea: retarget churned trials with the case-study sequence <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;background:#F6E5CC;color:#8F5307;padding:1px 8px;border-radius:10px">#marketing</span> <span style="font-family:'Spline Sans Mono',monospace;font-size:11px;color:#A69C8B">#ideas</span></span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">Tue</span><span style="font-size:12px;color:#8F5307">Edit</span><span style="font-size:12px;color:#A69C8B">Delete</span></div>
+  </div>
+  <!-- canvas: open columns, amber headers -->
+  <div style="display:flex;gap:36px;padding:28px 40px 48px">
+    <div style="width:38%">
+      <div style="font-size:12px;font-weight:600;color:#8F5307;margin-bottom:10px">Positioning draft</div>
+      <div style="font-size:13.5px;line-height:1.62;color:#463F33">
+        <p style="margin:0 0 10px"><strong>ThoughtDrop for teams</strong> is the working headline. The narrow-canvas complaint tested strongest in interviews — lead with width, not AI.</p>
+        <p style="margin:0 0 10px">Second message: capture without filing. Every competitor demo starts with “create a page” — ours starts with typing.</p>
+        <p style="margin:0">Draft the comparison table against the top three tools before the copy review on Friday.</p>
+      </div>
+    </div>
+    <div style="width:34%">
+      <div style="font-size:12px;font-weight:600;color:#8F5307;margin-bottom:10px">Launch tasks</div>
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F0E8DA;font-size:13.5px"><span style="width:15px;height:15px;border:1.5px solid #CFC5B2;border-radius:50%"></span><span style="flex:1">Finalize pricing page copy</span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#8F5307">P1</span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">Jul 11</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F0E8DA;font-size:13.5px"><span style="width:15px;height:15px;border:1.5px solid #C96F16;border-radius:50%;background:#F6E5CC"></span><span style="flex:1">Brief the design freelancer</span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">P2</span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:#A69C8B">Jul 14</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13.5px;color:#A69C8B"><span style="width:15px;height:15px;border-radius:50%;background:#C96F16;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center">✓</span><span style="flex:1;text-decoration:line-through">Book launch-week newsletter slot</span><span style="font-family:'Spline Sans Mono',monospace;font-size:10.5px">P3</span></div>
+      </div>
+    </div>
+    <div style="width:28%">
+      <div style="font-size:12px;font-weight:600;color:#8F5307;margin-bottom:10px">Channel spend</div>
+      <div style="font-size:13px">
+        <div style="display:flex;padding:6px 0;border-bottom:1.5px solid #EBE2D4;color:#A69C8B;font-size:11px;font-weight:600"><span style="flex:1.4">Channel</span><span style="flex:1;text-align:right">Jun</span><span style="flex:1;text-align:right">Jul</span></div>
+        <div style="display:flex;padding:7px 0;border-bottom:1px solid #F0E8DA"><span style="flex:1.4">Search</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">4,200</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">4,800</span></div>
+        <div style="display:flex;padding:7px 0;border-bottom:1px solid #F0E8DA"><span style="flex:1.4">Podcast</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">2,000</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">2,000</span></div>
+        <div style="display:flex;padding:7px 0"><span style="flex:1.4">Newsletter</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">850</span><span style="flex:1;text-align:right;font-family:'Spline Sans Mono',monospace;font-size:12px">1,200</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "commit to <a class="dv-oid" href="#1a">1a</a>, build all four surfaces" · "<a class="dv-oid" href="#1b">1b</a> but with <a class="dv-oid" href="#1a">1a</a>'s open columns" · "warmer amber on <a class="dv-oid" href="#1b">1b</a>"</p>
+</section>
+
+</x-dc>
+</body>
+</html>

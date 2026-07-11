@@ -8,11 +8,10 @@ consumer: Claude Code (one phase per brief; do not start a phase until the
   previous phase's verification passes)
 progress:
   - Phase 0: DONE, verified by Bryan on production 2026-07-09
-  - Phase 1: CODE COMPLETE (2026-07-09). Gemini review done, 5 findings,
-    all accepted (see docs/reviews/phase1-gemini-findings.md). Consolidated
-    fix brief at docs/reviews/phase1-fixlist.md (6 items incl. advisor
-    warnings). Phase 2 gated on: fix list merged, CI green, zero security
-    advisors, leaked-password toggle on.
+  - Phase 1: DONE (2026-07-09), incl. Phase 1.5 fix list (6/6 items).
+    Gemini review triaged (docs/reviews/), 11 migrations replay clean,
+    CI green, security advisors at zero — independently verified. Phase 2
+    is GO.
   - Parallel: Claude Design session for the four surfaces (page view, top
     bar, Inbox, capture modal); handoff bundle feeds Phase 2/3 briefs.
 ```
