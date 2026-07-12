@@ -1,6 +1,15 @@
 // Thin database layer around routing.ts's pure functions. All Supabase
 // calls live here; the routing decision itself is delegated to
 // decideRouting so it stays unit-testable without a database.
+//
+// Every tag written here (p_routing_tag, p_tags) comes from parseTags/
+// getLeftmostTag, whose regex (`[a-zA-Z][a-zA-Z0-9_-]{0,63}`, matches
+// lowercased) is structurally identical to the page_tag Postgres domain
+// (`^[a-z][a-z0-9_-]{0,63}$`, see supabase/migrations/20260709200542_pages.sql).
+// A tag parsed out of note text can therefore never violate that domain
+// check -- unlike a standalone user-typed tag (page creation, "[Create
+// #tag]"), which needs lib/tag-normalize.ts's explicit validation because
+// there's no parser regex standing between the keystroke and the column.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { decideRouting, getLeftmostTag, parseTags } from "@/lib/routing";

@@ -12,8 +12,15 @@ progress:
     Gemini review triaged (docs/reviews/), 11 migrations replay clean,
     CI green, security advisors at zero — independently verified. Phase 2
     is GO.
-  - Parallel: Claude Design session for the four surfaces (page view, top
-    bar, Inbox, capture modal); handoff bundle feeds Phase 2/3 briefs.
+  - Design track: DONE. Handoff bundle committed to design/ ("Paper
+    Quiet"); page directory screen has no design reference (built from
+    tokens; candidate for a later design pass).
+  - Phase 2: CODE COMPLETE (2026-07-11), deployed, CI green. Claude Code
+    ran the full manual script on a test account (prod project, cleaned
+    up). Accepted deviations: sign-out link in top bar; tag highlight via
+    backdrop-overlay. GATE PENDING: Bryan's manual verification run.
+  - Process rule from Phase 2: future UI verification runs happen on a
+    Supabase branch or local stack, never the production project.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

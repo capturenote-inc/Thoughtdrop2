@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { buildPageTree, type PageRow, type PageTreeNode } from "@/lib/page-tree";
-import { createPage } from "@/lib/actions/pages";
+import { createPage, type CreatePageFieldErrors } from "@/lib/actions/pages";
+import { isValidTag, normalizeTagInput, TAG_DUPLICATE_ERROR, TAG_FORMAT_ERROR, TAG_FORMAT_HELP } from "@/lib/tag-normalize";
 import { TagPill } from "@/components/TagPill";
 
 function TreeRow({ node }: { node: PageTreeNode }) {
@@ -27,26 +28,43 @@ function TreeRow({ node }: { node: PageTreeNode }) {
 export function PageDirectory({ pages }: { pages: PageRow[] }) {
   const [creating, setCreating] = useState(false);
   const [title, setTitle] = useState("");
-  const [tag, setTag] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const [parentId, setParentId] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<CreatePageFieldErrors>({});
   const [saving, setSaving] = useState(false);
 
   const tree = buildPageTree(pages);
   const eligibleParents = pages.filter((p) => p.depth < 2);
 
+  const normalizedTag = normalizeTagInput(tagInput);
+  const tagFormatValid = normalizedTag.length > 0 && isValidTag(normalizedTag);
+  const tagTaken = tagFormatValid && pages.some((p) => p.tag === normalizedTag);
+  const clientTagError = tagInput.trim()
+    ? !tagFormatValid
+      ? TAG_FORMAT_ERROR
+      : tagTaken
+        ? TAG_DUPLICATE_ERROR
+        : undefined
+    : undefined;
+  const tagError = fieldErrors.tag ?? clientTagError;
+
+  const canSubmit = title.trim().length > 0 && tagFormatValid && !tagTaken && !saving;
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    if (!canSubmit) return;
+    setFieldErrors({});
     setSaving(true);
     try {
-      await createPage({ tag, title, parentId: parentId || null });
+      const result = await createPage({ tag: tagInput, title, parentId: parentId || null });
+      if (!result.ok) {
+        setFieldErrors(result.fieldErrors);
+        return;
+      }
       setTitle("");
-      setTag("");
+      setTagInput("");
       setParentId("");
       setCreating(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create page");
     } finally {
       setSaving(false);
     }
@@ -71,24 +89,38 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
           className="mt-4 flex flex-col gap-3 rounded-[10px] border border-border-modal bg-bg-modal p-4 text-[13px]"
         >
           <div className="flex flex-col gap-1">
-            <label className="text-[11.5px] text-ink-faint">Title</label>
+            <label className="text-[11.5px] text-ink-faint">Title *</label>
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, title: undefined }));
+              }}
               required
               className="rounded-md border border-border bg-bg px-2.5 py-1.5 text-ink outline-none"
             />
+            {fieldErrors.title && <p className="text-[11.5px] text-red-600">{fieldErrors.title}</p>}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-[11.5px] text-ink-faint">Tag</label>
-            <input
-              value={tag}
-              onChange={(e) => setTag(e.target.value.toLowerCase())}
-              required
-              placeholder="marketing"
-              pattern="[a-z][a-z0-9_-]{0,63}"
-              className="rounded-md border border-border bg-bg px-2.5 py-1.5 font-mono text-ink outline-none"
-            />
+            <label className="text-[11.5px] text-ink-faint">Tag *</label>
+            <div className="flex items-center gap-2">
+              <input
+                value={tagInput}
+                onChange={(e) => {
+                  setTagInput(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, tag: undefined }));
+                }}
+                required
+                placeholder="marketing"
+                className="flex-1 rounded-md border border-border bg-bg px-2.5 py-1.5 font-mono text-ink outline-none"
+              />
+              {normalizedTag && (
+                <TagPill tag={normalizedTag} unmatched={!tagFormatValid} className="px-[7px] py-[1px] text-[11px]" />
+              )}
+            </div>
+            <p className={`text-[11.5px] ${tagError ? "text-red-600" : "text-ink-faint"}`}>
+              {tagError ?? TAG_FORMAT_HELP}
+            </p>
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[11.5px] text-ink-faint">Parent (optional, 3-level limit)</label>
@@ -105,7 +137,6 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
               ))}
             </select>
           </div>
-          {error && <p className="text-[11.5px] text-red-600">{error}</p>}
           <div className="flex justify-end gap-2">
             <button
               type="button"
@@ -116,7 +147,7 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
             </button>
             <button
               type="submit"
-              disabled={saving}
+              disabled={!canSubmit}
               className="flex h-7 items-center rounded-md bg-amber px-3 text-[12px] font-semibold text-on-amber disabled:opacity-60"
             >
               Create
