@@ -33,10 +33,18 @@ export function CaptureModalProvider({
   const close = useCallback(() => setState({ mode: "closed" }), []);
 
   useEffect(() => {
+    // ⌘K, not ⌘N: Chrome reserves ⌘N at the window level for "New Window"
+    // and never dispatches it to the page, so a ⌘N handler here is
+    // permanently unreachable in the browser Bryan actually uses. Accepted
+    // deviation from the design bundle (which specifies ⌘N) -- logged in
+    // docs/PHASES.md. Reserved combos (⌘N, ⌘T, ⌘W, ...) must be assumed
+    // unusable for in-page shortcuts, not tested: automated keyboard-event
+    // dispatch bypasses this reservation entirely, so it passes tests that
+    // would never pass for a real user pressing the real key.
     function onKeyDown(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
       const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "n" && !isTyping) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && !isTyping) {
         e.preventDefault();
         setState({ mode: "create" });
       }

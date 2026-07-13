@@ -15,12 +15,35 @@ progress:
   - Design track: DONE. Handoff bundle committed to design/ ("Paper
     Quiet"); page directory screen has no design reference (built from
     tokens; candidate for a later design pass).
-  - Phase 2: CODE COMPLETE (2026-07-11), deployed, CI green. Claude Code
-    ran the full manual script on a test account (prod project, cleaned
-    up). Accepted deviations: sign-out link in top bar; tag highlight via
-    backdrop-overlay. GATE PENDING: Bryan's manual verification run.
+  - Phase 2: CODE COMPLETE (2026-07-11), deployed, CI green. Accepted
+    deviations: sign-out link in top bar; tag highlight via
+    backdrop-overlay.
+  - Phase 2 gate failure (2026-07-12): create-page crash on invalid tag
+    (no input validation + unhandled throw). Fixed same day with form UX
+    rebuild.
+  - Gemini Phase 2 review: 5 findings, 4 accepted / 1 rejected (uppercase
+    Critical was false — parser lowercases; verified in source).
+    Phase 2.5 fix list implemented, race conditions verified via forced
+    SQL on a branch, deployed, CI green (2026-07-12).
+  - Gate findings (2026-07-13): two fixes before re-run. (1) ⌘N replaced
+    with ⌘K everywhere (global handler, Create Note button hint) --
+    accepted deviation from the design bundle, which specifies ⌘N. Root
+    cause: Chrome reserves ⌘N at the window level ("New Window"); it never
+    reaches the page, so the handler was permanently unreachable despite
+    passing automated verification (synthetic keydown events bypass
+    browser-level reservation entirely). (2) Search stub was styled
+    interactive but inert -- now visibly disabled (opacity, cursor,
+    tooltip "Search coming soon"), and the "/" focus shortcut is removed
+    with it rather than left focusing a dead input.
+  - GATE PENDING: Bryan's eight-step manual re-run on production. Phase 3
+    opens when it passes.
   - Process rule from Phase 2: future UI verification runs happen on a
     Supabase branch or local stack, never the production project.
+  - Process rule from the gate findings: reserved OS/browser shortcuts
+    (⌘N, ⌘T, ⌘W, and similar) must be assumed unusable for in-page
+    handlers, not verified by testing -- automated keyboard-event dispatch
+    does not reproduce browser-level reservation, so a passing automated
+    check does not confirm a real keypress reaches the page.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
@@ -120,4 +143,6 @@ progress:
 - Persisted "pinned open" notes drawer state (DESIGN D1 tension).
 - Move/re-parent existing pages (blocked at DB level in MVP; see
   phase1-fixlist.md item 3).
+- Convert a note into a task (new story; touches task model).
+- (Pinned pages moved INTO MVP scope at SPEC v1.6, 2026-07-13.)
 - Everything in SPEC.md non-goals.

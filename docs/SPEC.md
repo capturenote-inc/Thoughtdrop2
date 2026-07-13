@@ -1,11 +1,13 @@
 # SPEC.md — ThoughtDrop MVP
 
 ```
-version: 1.4
+version: 1.6
 status: approved
-changed: Designer pass complete. Open questions 1-3 closed in DESIGN.md v1.0
-  (notes drawer, inline Inbox triage, fluid-shrink canvas). Only the AI
-  provider question remains open, assigned to the Architect.
+changed: v1.5 added page colors (fixed palette, user-picked, default amber;
+  schema adds pages.color). v1.6 accepts pinned pages into MVP from the
+  design iteration: up to 5 pages pinnable to the top bar (schema adds
+  pages.pinned_at). Home screen design ("Dashboard") produced early by the
+  design iteration; build remains Phase 4.
 ```
 
 ## Problem statement
@@ -19,11 +21,11 @@ Architecture constraint: the data model must anticipate small teams (multi-user,
 
 ## Product shape
 
-Web application. Top bar navigation (no sidebar): logo/home button, page directory, global task view, Inbox, search, and an always-visible Create Note button. Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
+Web application. Top bar navigation (no sidebar): logo/home button, Dashboard (Home), page directory, global task view, Inbox, search, up to 5 user-pinned pages, and an always-visible Create Note button. Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
 
-- **Page**: a topic container identified by a globally unique hashtag (e.g. `#marketing`). Pages nest up to **three levels deep**. Nesting is represented by a `parent_id` reference on the page; tag uniqueness is enforced by a database unique constraint. Because tags are globally unique, nesting is organizational only and never affects routing.
+- **Page**: a topic container identified by a globally unique hashtag (e.g. `#marketing`). Pages nest up to **three levels deep**. Nesting is represented by a `parent_id` reference on the page; tag uniqueness is enforced by a database unique constraint. Because tags are globally unique, nesting is organizational only and never affects routing. Each page has a **color** chosen from a fixed palette (user-picked at create/edit, default amber); the page's tag pill renders in that color wherever it appears. Unmatched tags (no owning page) always render in the default amber treatment.
 - **Note**: a captured piece of text. Contains zero or more hashtags.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.
@@ -50,7 +52,7 @@ If re-evaluation runs and the new routing tag matches no page, or no tag remains
 2. As a user, when my note contains a hashtag matching an existing page, the note appears on that page automatically.
 3. As a user, when my note has no hashtag, it lands in the Inbox for later triage.
 4. As a user, when my note's routing tag matches no existing page, it lands in the Inbox and I am prompted to either create the page or fix the tag. The prompt applies to the routing tag only; other unmatched tags are ignored in MVP. (Prompt surface — modal vs inline — is a Designer decision.)
-5. As a user, I can create pages and nest them up to three levels deep, each with a globally unique hashtag.
+5. As a user, I can create pages and nest them up to three levels deep, each with a globally unique hashtag and a color picked from a fixed palette (changeable later by editing the page).
 6. As a user, I can compose a page from blocks arranged in 2–4 drag-resizable columns (no free-form placement). Column count and widths persist per page, server-side. (Resize interaction details are a Designer decision.)
 7. As a user, I can use three block types: rich text, task list, and simple table.
 8. As a user, I can create tasks with a due date, priority, and status (todo / doing / done), and update them in place.
@@ -62,6 +64,7 @@ If re-evaluation runs and the new routing tag matches no page, or no tag remains
 14. As a user, I can delete any note or task, from its page, the Inbox, or the global task view.
 15. As a user, when editing changes a note's routing tag, the note re-routes to the page owning the new routing tag (or to the Inbox if no tag remains or it is unmatched).
 16. As a user, I can open a page directory from the top bar showing all my pages and their nesting, and navigate to any page from it.
+17. As a user, I can pin up to 5 pages to the top bar for one-click access, and unpin them. Attempting a 6th pin explains the limit.
 
 ## Explicit non-goals (post-MVP)
 

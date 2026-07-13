@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
 
@@ -20,20 +19,6 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
 export function TopBar({ untriagedCount }: { untriagedCount: number }) {
   const pathname = usePathname();
   const { openCreate } = useCaptureModal();
-  const searchRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      const target = e.target as HTMLElement | null;
-      const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
-      if (e.key === "/" && !isTyping) {
-        e.preventDefault();
-        searchRef.current?.focus();
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
 
   const isPages = pathname === "/" || pathname.startsWith("/pages");
   const isTasks = pathname.startsWith("/tasks");
@@ -68,15 +53,22 @@ export function TopBar({ untriagedCount }: { untriagedCount: number }) {
 
       <div className="flex-1" />
 
-      <div className="flex h-7 w-[260px] items-center gap-2 rounded-md border border-border px-2.5 text-[12.5px] text-ink-faint">
+      {/* Visibly inactive, not just unresponsive: Phase 5 builds real
+          search. A styled-but-dead input (previously readOnly, with a "/"
+          hint that focused it into nowhere) reads as broken, not
+          unfinished -- disabled + reduced opacity + a tooltip reads as
+          "not yet". The "/" focus shortcut is gone with it: a shortcut
+          that focuses a dead input is the same lie twice. */}
+      <div
+        title="Search coming soon"
+        className="flex h-7 w-[260px] cursor-not-allowed items-center gap-2 rounded-md border border-border px-2.5 text-[12.5px] text-ink-faint opacity-50"
+      >
         <input
-          ref={searchRef}
           type="text"
           placeholder="Search"
-          readOnly
-          className="w-full bg-transparent outline-none placeholder:text-ink-faint"
+          disabled
+          className="w-full cursor-not-allowed bg-transparent outline-none placeholder:text-ink-faint"
         />
-        <span className="font-mono text-[10px] text-ink-ghost">/</span>
       </div>
 
       <button
@@ -85,7 +77,7 @@ export function TopBar({ untriagedCount }: { untriagedCount: number }) {
         className="flex h-[30px] items-center gap-2 rounded-md bg-amber px-3.5 text-[13px] font-semibold text-on-amber hover:bg-amber-hover"
       >
         Create Note
-        <span className="font-mono text-[10px] font-normal opacity-75">⌘N</span>
+        <span className="font-mono text-[10px] font-normal opacity-75">⌘K</span>
       </button>
 
       {/* Not part of the approved design (2b has no account/session
