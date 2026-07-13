@@ -43,6 +43,14 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
     }
   }
 
+  async function handleDelete(noteId: string) {
+    setErrors((prev) => ({ ...prev, [noteId]: "" }));
+    const result = await deleteNote(noteId);
+    if (!result.ok) {
+      setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+    }
+  }
+
   return (
     <div className="mx-10 mb-12 mt-3.5 border-t border-border">
       {notes.map((note) => {
@@ -75,7 +83,7 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => void deleteNote(note.id)}
+                    onClick={() => void handleDelete(note.id)}
                     className="text-[12px] text-ink-secondary hover:text-ink"
                   >
                     Delete
@@ -92,7 +100,7 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => void deleteNote(note.id)}
+                    onClick={() => void handleDelete(note.id)}
                     className="text-[12px] text-ink-secondary hover:text-ink"
                   >
                     Delete

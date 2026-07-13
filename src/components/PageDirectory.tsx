@@ -31,6 +31,7 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
   const [tagInput, setTagInput] = useState("");
   const [parentId, setParentId] = useState("");
   const [fieldErrors, setFieldErrors] = useState<CreatePageFieldErrors>({});
+  const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const tree = buildPageTree(pages);
@@ -54,11 +55,16 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
     e.preventDefault();
     if (!canSubmit) return;
     setFieldErrors({});
+    setFormError(null);
     setSaving(true);
     try {
       const result = await createPage({ tag: tagInput, title, parentId: parentId || null });
       if (!result.ok) {
-        setFieldErrors(result.fieldErrors);
+        if ("fieldErrors" in result) {
+          setFieldErrors(result.fieldErrors);
+        } else {
+          setFormError(result.error);
+        }
         return;
       }
       setTitle("");
@@ -137,6 +143,7 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
               ))}
             </select>
           </div>
+          {formError && <p className="text-[11.5px] text-red-600">{formError}</p>}
           <div className="flex justify-end gap-2">
             <button
               type="button"

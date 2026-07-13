@@ -49,6 +49,7 @@ export function CreateNoteModal({
 }) {
   const [draft, setDraft] = useState(initialBody);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -91,11 +92,12 @@ export function CreateNoteModal({
   async function save() {
     if (!draft.trim() || saving) return;
     setSaving(true);
+    setError(null);
     try {
-      if (editingNoteId) {
-        await updateNote(editingNoteId, draft);
-      } else {
-        await createNote(draft);
+      const result = editingNoteId ? await updateNote(editingNoteId, draft) : await createNote(draft);
+      if (!result.ok) {
+        setError(result.error);
+        return;
       }
       onClose();
     } finally {
@@ -122,6 +124,7 @@ export function CreateNoteModal({
             className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost`}
           />
         </div>
+        {error && <p className="px-5 pt-2 text-[11.5px] text-red-600">{error}</p>}
         <div className="flex items-center gap-1.5 px-5 pb-[14px] pt-[10px] text-[11.5px]">
           {!leftmostTag && <span className="text-ink-faint">No tag? It lands in your Inbox.</span>}
           {leftmostTag && matchedPage && (
