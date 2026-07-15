@@ -125,7 +125,7 @@ export function CreateNoteModal({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Write it down. A #tag gives it a home."
-            className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost`}
+            className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost focus-visible:outline-none`}
           />
         </div>
         {error && <p className="px-6 pt-2 text-[11.5px] text-red-600">{error}</p>}
