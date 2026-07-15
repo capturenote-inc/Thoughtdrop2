@@ -62,7 +62,7 @@ If re-evaluation runs and the new routing tag matches no page, or no tag remains
 6. As a user, I can compose a page from blocks arranged in 2–4 drag-resizable columns (no free-form placement). Column count and widths persist per page, server-side. (Resize interaction details are a Designer decision.)
 7. As a user, I can use three block types: rich text, task list, and simple table.
 8. As a user, I can create tasks with a due date, priority, and status (todo / doing / done), and update them in place.
-9. As a user, I can open a global task view from the top bar showing all tasks across all pages, and act on them there.
+9. As a user, I can open a global task view from the sidebar showing all tasks across all pages, and act on them there.
 10. As a user, my Home screen shows my upcoming tasks, my untriaged Inbox count, and my recently visited pages.
 11. As a user, I can run a basic search across notes, tasks, and page titles: substring match only, no filters, no ranking.
 12. As a user, for any untagged note in my Inbox, I can request/receive an AI-suggested tag and accept or reject it in one action. (In scope; scheduled as the final phase in PHASES.md so it can slip without blocking the core loop.)

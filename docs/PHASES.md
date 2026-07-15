@@ -90,6 +90,10 @@ progress:
     sequencing but do not prohibit work. Functional verification remains
     required for changed flows, while manual gates are useful feedback rather
     than blockers for the next idea.
+  - Task view foundation (2026-07-15): global task creation and inline task
+    editing are implemented from the existing tasks table: status, priority,
+    due date, title, and delete. Task-list blocks and Inbox task rendering
+    remain separate follow-up work.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
