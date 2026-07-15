@@ -84,6 +84,7 @@ function PageTreeLink({ node, pathname, openIds, onToggle, level }: { node: Page
 function PagesSection({ pages, pathname, expanded, open, onToggle }: { pages: SidebarPage[]; pathname: string; expanded: boolean; open: boolean; onToggle: () => void }) {
   const active = pathname.startsWith("/pages");
   const tree = useMemo(() => buildPageTree(pages), [pages]);
+  const pinnedPages = useMemo(() => pages.filter((page) => page.pinned_at).sort((a, b) => (a.pinned_at as string).localeCompare(b.pinned_at as string)), [pages]);
   const [openIds, setOpenIds] = useState<Set<string>>(() => new Set(expandableIds(tree)));
 
   function toggleNode(id: string) {
@@ -108,13 +109,24 @@ function PagesSection({ pages, pathname, expanded, open, onToggle }: { pages: Si
       </div>
       {open && (
         <>
+          {pinnedPages.length > 0 && (
+            <div className="mb-2 px-1">
+              <p className="mb-1 px-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-rail-muted">Pinned</p>
+              <div className="space-y-0.5">
+                {pinnedPages.map((page) => {
+                  const palette = PAGE_COLORS[resolvePageColor(page.color)];
+                  const pageActive = pathname === `/pages/${page.tag}`;
+                  return <Link key={page.id} href={`/pages/${page.tag}`} className={`flex h-8 items-center rounded-md px-2 text-[12px] ${pageActive ? "bg-rail-active text-rail-ink" : "text-rail-muted hover:bg-rail-active hover:text-rail-ink"}`}><span className="mr-2 h-2.5 w-2.5 rounded-full" style={{ backgroundColor: palette.ink }} /><span className="truncate">{page.title}</span><span className="ml-auto text-[10px] text-amber-ink">●</span></Link>;
+                })}
+              </div>
+            </div>
+          )}
           <div className="mt-1 max-h-[min(38vh,400px)] overflow-y-auto border-l border-rail-line py-1 pl-1.5">
             {tree.length === 0 ? (
               <p className="px-2 py-2 text-[11px] text-rail-muted">No pages yet.</p>
             ) : tree.map((node) => <PageTreeLink key={node.id} node={node} pathname={pathname} openIds={openIds} onToggle={toggleNode} level={0} />)}
           </div>
-          <div className="mt-2 grid grid-cols-2 gap-1 px-1">
-            <Link href="/pages" className="flex h-8 items-center justify-center rounded-md border border-rail-line text-[11px] text-rail-muted hover:bg-rail-active hover:text-rail-ink">Manage</Link>
+          <div className="mt-2 px-1">
             <Link href="/pages?new=1" className="flex h-8 items-center justify-center rounded-md bg-rail-active text-[11px] font-medium text-rail-ink hover:bg-rail-line">+ New page</Link>
           </div>
         </>

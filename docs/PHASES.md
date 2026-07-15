@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.6
+version: 1.7
 status: exploratory
-inputs: SPEC.md v1.9, DESIGN.md v1.0
+inputs: SPEC.md v1.10, DESIGN.md v1.0
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -103,8 +103,13 @@ progress:
   - Ledger correction (2026-07-15): replace the oversized capture panel with
     a compact writing surface; remove generic note-card boxing in favor of a
     low-chrome paper treatment; build the sidebar from real `parent_id`
-    hierarchy with per-parent collapse controls; add explicit Manage and New
-    page actions; increase light-theme page color contrast.
+    hierarchy with per-parent collapse controls; add an explicit New page
+    action; increase light-theme page color contrast.
+  - Pin interaction correction (2026-07-15): page pins now populate a visible
+    quick-access section above the sidebar tree. The ambiguous Manage action
+    is removed in favor of an explicit New page action. Notes gain a
+    `pinned_at` migration, Pin/Unpin actions, pinned-first Page and Inbox
+    ordering, and a pinned state label.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

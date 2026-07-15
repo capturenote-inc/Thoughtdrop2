@@ -25,8 +25,9 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
       : Promise.resolve({ data: null }),
     supabase
       .from("notes")
-      .select("id, body, created_at")
+      .select("id, body, created_at, pinned_at")
       .eq("page_id", page.id)
+      .order("pinned_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false }),
   ]);
 

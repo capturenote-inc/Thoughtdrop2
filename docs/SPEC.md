@@ -1,7 +1,7 @@
 # SPEC.md — ThoughtDrop
 
 ```
-version: 1.9
+version: 1.10
 status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
@@ -15,6 +15,8 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   objects; light and dark appearance are first-class. v1.9 refines that
   direction: capture is a compact writing surface, notes use a low-chrome
   paper treatment, and the sidebar presents the actual collapsible page tree.
+  v1.10 makes page pins visible as sidebar quick access and adds persistent
+  note pins that sort important notes first in their Page or Inbox.
 ```
 
 ## Problem statement
@@ -35,7 +37,8 @@ Pages; the Pages collection expands in place and Capture is always visible.
 The Focused Ledger visual language favors restrained borders, dense task rows,
 and a neutral theme with a deliberate accent, in both light and dark modes.
 The Pages rail exposes the real parent/child hierarchy and provides distinct
-actions to manage pages and create a new page.
+navigation to Pages and to create a new page. Pinned pages appear in a
+dedicated quick-access section above the tree.
 Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
@@ -45,7 +48,8 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
   its routing context, capture time, and available actions with its body so it
   reads as a meaningful object rather than an anonymous text row. Capture and
   note presentation should feel like writing surfaces, not oversized terminal
-  dialogs or generic dashboard cards.
+  dialogs or generic dashboard cards. A user may pin a note; pinned notes
+  persist and sort above unpinned notes within the current Page or Inbox.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.
 - **Routing**: any note containing `#tag` is automatically placed on the page owning that tag, per the rules below.

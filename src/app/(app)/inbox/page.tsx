@@ -8,9 +8,10 @@ export default async function Inbox() {
 
   const { data: notes } = await supabase
     .from("notes")
-    .select("id, body, created_at, routing_tag, routing_unmatched")
+    .select("id, body, created_at, pinned_at, routing_tag, routing_unmatched")
     .eq("workspace_id", workspaceId)
     .is("page_id", null)
+    .order("pinned_at", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
 
   const count = notes?.length ?? 0;

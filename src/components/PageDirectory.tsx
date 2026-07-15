@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { buildPageTree, type PageRow, type PageTreeNode } from "@/lib/page-tree";
 import { createPage, type CreatePageFieldErrors } from "@/lib/actions/pages";
 import { isValidTag, normalizeTagInput, TAG_DUPLICATE_ERROR, TAG_FORMAT_ERROR, TAG_FORMAT_HELP } from "@/lib/tag-normalize";
@@ -53,6 +54,7 @@ function Shelf({ node, noteCounts }: { node: PageTreeNode; noteCounts: Record<st
 }
 
 export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { pages: PageRow[]; noteCounts: Record<string, number>; autoOpenCreate?: boolean }) {
+  const router = useRouter();
   const [creating, setCreating] = useState(autoOpenCreate);
   const [title, setTitle] = useState("");
   const [tagInput, setTagInput] = useState("");
@@ -100,9 +102,15 @@ export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { p
       setParentId("");
       setColor(DEFAULT_PAGE_COLOR);
       setCreating(false);
+      router.replace("/pages");
     } finally {
       setSaving(false);
     }
+  }
+
+  function closeCreate() {
+    setCreating(false);
+    if (autoOpenCreate) router.replace("/pages");
   }
 
   return (
@@ -190,7 +198,7 @@ export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { p
           <div className="mt-6 flex justify-end gap-2">
             <button
               type="button"
-              onClick={() => setCreating(false)}
+              onClick={closeCreate}
               className="flex h-8 items-center rounded-lg border border-border px-3 text-[12px] text-ink-secondary hover:text-ink"
             >
               Cancel

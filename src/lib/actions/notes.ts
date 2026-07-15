@@ -57,3 +57,31 @@ export const deleteNote = authenticatedAction(async ({ supabase }, noteId: strin
   revalidatePath("/", "layout");
   return { ok: true };
 });
+
+export const pinNote = authenticatedAction(async ({ supabase }, noteId: string): Promise<NoteActionResult> => {
+  const { data, error } = await supabase
+    .from("notes")
+    .update({ pinned_at: new Date().toISOString() })
+    .eq("id", noteId)
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return { ok: false, error: "Note not found." };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+});
+
+export const unpinNote = authenticatedAction(async ({ supabase }, noteId: string): Promise<NoteActionResult> => {
+  const { data, error } = await supabase
+    .from("notes")
+    .update({ pinned_at: null })
+    .eq("id", noteId)
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return { ok: false, error: "Note not found." };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+});

@@ -18,11 +18,13 @@ export function NoteCard({
   body,
   createdAt,
   headerTag,
+  pinned = false,
   footer,
 }: {
   body: string;
   createdAt: string;
   headerTag: NoteCardTag | null;
+  pinned?: boolean;
   footer: ReactNode;
 }) {
   return (
@@ -39,6 +41,7 @@ export function NoteCard({
           <span className="text-[11px] text-ink-faint">untagged</span>
         )}
         {headerTag?.unmatched && <span className="text-[11px] text-ink-faint">no page owns this tag</span>}
+        {pinned && <span className="text-[10px] font-medium text-amber-ink">Pinned</span>}
         <div className="flex-1" />
         <span className="font-mono text-[10.5px] text-ink-faint">{formatRelativeTime(createdAt)}</span>
       </div>

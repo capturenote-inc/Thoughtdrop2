@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { NoteCard } from "@/components/NoteCard";
-import { deleteNote } from "@/lib/actions/notes";
+import { deleteNote, pinNote, unpinNote } from "@/lib/actions/notes";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import type { PageColorKey } from "@/lib/page-colors";
 
@@ -10,6 +10,7 @@ interface DrawerNote {
   id: string;
   body: string;
   created_at: string;
+  pinned_at: string | null;
 }
 
 export function NotesDrawer({
@@ -26,12 +27,24 @@ export function NotesDrawer({
   const [open, setOpen] = useState(true);
   const { openEdit } = useCaptureModal();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [pinning, setPinning] = useState<string | null>(null);
 
   async function handleDelete(noteId: string) {
     setErrors((prev) => ({ ...prev, [noteId]: "" }));
     const result = await deleteNote(noteId);
     if (!result.ok) {
       setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+    }
+  }
+
+  async function handleTogglePin(note: DrawerNote) {
+    setErrors((prev) => ({ ...prev, [note.id]: "" }));
+    setPinning(note.id);
+    try {
+      const result = note.pinned_at ? await unpinNote(note.id) : await pinNote(note.id);
+      if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+    } finally {
+      setPinning(null);
     }
   }
 
@@ -58,8 +71,12 @@ export function NotesDrawer({
                 body={note.body}
                 createdAt={note.created_at}
                 headerTag={{ tag: pageTag, color: pageColor }}
+                pinned={Boolean(note.pinned_at)}
                 footer={
                   <>
+                    <button type="button" onClick={() => void handleTogglePin(note)} disabled={pinning === note.id} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
+                      {note.pinned_at ? "Unpin" : "Pin"}
+                    </button>
                     <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} className="text-ink-secondary hover:text-ink">
                       Edit
                     </button>
