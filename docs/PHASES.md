@@ -113,6 +113,12 @@ progress:
   - Brand direction (2026-07-15): ThoughtDrop adopts a bespoke, compact owl
     mark in the sidebar. It captures the quiet thinking-companion feeling
     without using the Codex companion artwork as product branding.
+  - Visual follow-up (2026-07-15): Bryan confirmed the current owl is only a
+    first-pass mark; develop a more distinctive, polished ThoughtDrop logo in
+    the next brand pass. The Capture modal still shows a static orange frame
+    around the writing area in both themes. Remove that frame entirely and
+    retain only a quiet, neutral writing surface; the earlier focus-outline
+    change did not address this separate border.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
