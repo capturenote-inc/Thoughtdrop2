@@ -20,14 +20,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       .is("page_id", null),
   ]);
 
-  const pinnedPages = (pages ?? [])
-    .filter((p) => p.pinned_at)
-    .sort((a, b) => (a.pinned_at as string).localeCompare(b.pinned_at as string));
-
   return (
     <CaptureModalProvider pages={pages ?? []}>
       <div className="flex min-h-dvh bg-bg">
-        <TopBar untriagedCount={untriagedCount ?? 0} pinnedPages={pinnedPages} />
+        <TopBar untriagedCount={untriagedCount ?? 0} pages={pages ?? []} />
         <main className="min-w-0 flex-1">{children}</main>
       </div>
     </CaptureModalProvider>

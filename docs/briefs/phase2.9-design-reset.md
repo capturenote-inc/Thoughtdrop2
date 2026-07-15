@@ -18,9 +18,9 @@ themselves, not like a paper-coloured administration tool.
 The selected direction is **Studio Desk**:
 
 - An inky, compact navigation rail anchors the workspace without narrowing
-  the working canvas. It contains Pages, Tasks, Inbox, pinned pages, and the
-  account control; Today joins it with Phase 4. It replaces the crowded top
-  bar.
+  the working canvas. Its order is **Today, Inbox, Tasks, Pages**. Pages is
+  an expandable collection in the rail, so the actual spaces remain one
+  click away. It replaces the crowded top bar.
 - The main canvas is warm and bright, with strong editorial hierarchy:
   large page titles, deliberate whitespace, and an obvious primary action.
   The page colour is an identity accent, not a card background pasted onto
@@ -99,9 +99,9 @@ Research sources:
 ### App shell
 
 - Fixed left rail: 72px icon-first at rest; expands to 224px on explicit
-  toggle. The expanded state contains labelled navigation and pinned pages.
-  Today is added to this rail with Phase 4, when it has real data. It is the
-  only dark surface: `#191916` with quiet warm-white text.
+  toggle. The expanded state contains labelled navigation and an expandable
+  Pages collection, ordered with pinned pages first. It is the only dark
+  surface: `#191916` with quiet warm-white text.
 - Main workspace: `#F7F5F1` base with `#FFFDFC` elevated composer and modal
   surfaces. Ink is near-black (`#161512`); dividers are restrained
   (`#E5E2DC`). The capture signal is warm vermilion (`#D95D21`), not beige
@@ -111,12 +111,12 @@ Research sources:
 - Keep one visible capture button in the rail. On wide screens, pair it with
   a keyboard shortcut hint; it remains permanently reachable.
 
-### Today (Phase 4 visual contract, shell may land earlier)
+### Today (Phase 2.9 foundation)
 
 - Open with an inviting inline composer: "Capture a thought… #tag routes it."
-- Below it, two columns: **Now** (upcoming tasks and Inbox triage) and
-  **Momentum** (recent routed notes, pinned/recent pages). Sections collapse
-  to a purposeful empty state when data does not exist; no invented metrics.
+- Below it, two columns: **Now** (Inbox triage and existing open tasks) and
+  **Momentum** (recent routed notes and pinned pages). Sections collapse to
+  a purposeful empty state when data does not exist; no invented metrics.
 - Today is a work surface, not an analytics dashboard. No charts, streaks,
   or ornamental widgets in MVP.
 
@@ -155,8 +155,9 @@ Research sources:
    tests.
 3. Rebuild the directory as the spatial index and remove the unavailable
    Search control.
-4. Implement the Today screen alongside Phase 4 using this visual contract;
-   do not create fake task or recent-page data sooner.
+4. Implement the Today foundation from real existing data: Inbox count, open
+   tasks, recent notes, and pinned pages. Phase 4 extends it with the full
+   task lifecycle and recently visited pages; do not create fake data.
 5. Run visual QA at 1440×900 and 1280×800 using realistic seeded data:
    8+ pages, nested pages, 15+ notes, 3 unmatched notes, and 5 pins.
 

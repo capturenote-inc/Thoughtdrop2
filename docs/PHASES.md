@@ -81,6 +81,10 @@ progress:
     visual direction with "Studio Desk" while preserving the MVP's capture
     and routing behavior. It is a visual/interaction pass, not a feature
     expansion, and must ship before the combined Phase 2 / 2.75 gate re-run.
+  - Information architecture decision (2026-07-15): the app's primary order
+    is Today, Inbox, Tasks, Pages. Pages is an expandable sidebar collection
+    with pinned pages ordered first. Today may use current real data in Phase
+    2.9; Phase 4 extends it rather than replacing it.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
@@ -132,13 +136,16 @@ thinking workspace before more capability is added.
 
 1. Implement the Studio Desk app shell from
    `docs/briefs/phase2.9-design-reset.md`: compact/expandable left rail,
-   one persistent Capture action, existing navigation, Inbox count, and
-   pinned pages. Remove the disabled Search control until Phase 5 ships it.
+   one persistent Capture action, ordered Today → Inbox → Tasks → Pages,
+   Inbox count, and an expandable Pages collection with pinned pages first.
+   Remove the disabled Search control until Phase 5 ships it.
 2. Establish the new visual tokens and type scale; then restyle the capture
    composer, Inbox, page header, visible notes stream, and page directory.
    Keep every Phase 2 and 2.75 behavior and server action intact.
-3. Do not build Today data, tasks, blocks, AI, search, mobile layouts, or
-   other new features in this phase. Phase 4 owns the real Today surface.
+3. Build Today only from real existing data: Inbox count, open tasks, recent
+   notes, and pinned pages. Do not add task creation/lifecycle, blocks, AI,
+   search, mobile layouts, or other new features in this phase. Phase 4
+   extends Today with the complete task view and recently visited pages.
 4. Run the combined Phase 2 / 2.75 manual functional gate after the restyle,
    then visual QA at 1440×900 and 1280×800 with representative data.
 
@@ -164,7 +171,8 @@ at 1280px; all existing functional gate steps pass.
 1. Task-list block: create tasks inside it (due date, priority, status todo/doing/done), update in place (stories 7 remainder, 8). Tasks never parse hashtags (SPEC rule).
 2. Unassigned tasks: create from Inbox or global task view; live in Inbox.
 3. Global task view from top bar: all tasks across pages + Inbox, update status/priority/due inline, delete (stories 9, 14).
-4. Home screen: upcoming tasks, untriaged Inbox count, recently visited pages (story 10).
+4. Extend the Today screen with upcoming tasks, untriaged Inbox count, and
+   recently visited pages (story 10).
 
 **Verify**: create tasks in a block and in Inbox; walk one task todo → doing → done from the global view; Home shows all three sections correctly.
 
