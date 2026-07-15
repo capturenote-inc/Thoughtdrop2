@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
+import { PAGE_COLORS, resolvePageColor } from "@/lib/page-colors";
 
 function NavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
   return (
@@ -16,7 +17,20 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
   );
 }
 
-export function TopBar({ untriagedCount }: { untriagedCount: number }) {
+interface PinnedPage {
+  id: string;
+  tag: string;
+  title: string;
+  color: string;
+}
+
+export function TopBar({
+  untriagedCount,
+  pinnedPages,
+}: {
+  untriagedCount: number;
+  pinnedPages: PinnedPage[];
+}) {
   const pathname = usePathname();
   const { openCreate } = useCaptureModal();
 
@@ -51,6 +65,28 @@ export function TopBar({ untriagedCount }: { untriagedCount: number }) {
         </Link>
       </div>
 
+      {pinnedPages.length > 0 && (
+        <>
+          <div className="h-5 w-px shrink-0 bg-border" />
+          <div className="flex min-w-0 shrink items-center gap-[7px] overflow-hidden">
+            {pinnedPages.map((page) => {
+              const palette = PAGE_COLORS[resolvePageColor(page.color)];
+              const active = pathname === `/pages/${page.tag}`;
+              return (
+                <Link
+                  key={page.id}
+                  href={`/pages/${page.tag}`}
+                  className={`flex h-6 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[12.5px] ${active ? "font-medium" : ""}`}
+                  style={{ backgroundColor: palette.tint, color: palette.ink }}
+                >
+                  {page.title}
+                </Link>
+              );
+            })}
+          </div>
+        </>
+      )}
+
       <div className="flex-1" />
 
       {/* Visibly inactive, not just unresponsive: Phase 5 builds real
@@ -58,10 +94,11 @@ export function TopBar({ untriagedCount }: { untriagedCount: number }) {
           hint that focused it into nowhere) reads as broken, not
           unfinished -- disabled + reduced opacity + a tooltip reads as
           "not yet". The "/" focus shortcut is gone with it: a shortcut
-          that focuses a dead input is the same lie twice. */}
+          that focuses a dead input is the same lie twice. Narrowed from
+          260 to 220px per the final-assembly design: pins take the space. */}
       <div
         title="Search coming soon"
-        className="flex h-7 w-[260px] cursor-not-allowed items-center gap-2 rounded-md border border-border px-2.5 text-[12.5px] text-ink-faint opacity-50"
+        className="flex h-7 w-[220px] shrink-0 cursor-not-allowed items-center gap-2 rounded-md border border-border px-2.5 text-[12.5px] text-ink-faint opacity-50"
       >
         <input
           type="text"

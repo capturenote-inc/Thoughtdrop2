@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentWorkspaceId } from "@/lib/workspace";
-import { TagPill } from "@/components/TagPill";
+import { PageHeader } from "@/components/PageHeader";
 import { NotesDrawer } from "@/components/NotesDrawer";
+import { resolvePageColor } from "@/lib/page-colors";
 
 export default async function PageView({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
@@ -11,7 +12,7 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
 
   const { data: page } = await supabase
     .from("pages")
-    .select("id, tag, title, parent_id")
+    .select("id, tag, title, parent_id, color, pinned_at")
     .eq("workspace_id", workspaceId)
     .eq("tag", tag)
     .maybeSingle();
@@ -31,13 +32,16 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
 
   return (
     <div>
-      <div className="flex items-baseline gap-3.5 px-10 pt-9">
-        {parent && <span className="text-[12px] text-ink-faint">{parent.title} /</span>}
-        <h1 className="m-0 text-[26px] font-semibold tracking-[-0.02em] text-ink">{page.title}</h1>
-        <TagPill tag={page.tag} className="px-[9px] py-[2px] text-[12px]" />
-      </div>
+      <PageHeader
+        pageId={page.id}
+        tag={page.tag}
+        title={page.title}
+        color={page.color}
+        pinned={Boolean(page.pinned_at)}
+        parentTitle={parent?.title ?? null}
+      />
 
-      <NotesDrawer notes={notes ?? []} />
+      <NotesDrawer notes={notes ?? []} pageTag={page.tag} pageColor={resolvePageColor(page.color)} />
 
       <div className="px-10 pb-12 pt-7 text-[11.5px] text-ink-faint">Columns and blocks — Phase 3.</div>
     </div>

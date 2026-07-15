@@ -1,35 +1,65 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { buildPageTree, type PageRow, type PageTreeNode } from "@/lib/page-tree";
 import { createPage, type CreatePageFieldErrors } from "@/lib/actions/pages";
 import { isValidTag, normalizeTagInput, TAG_DUPLICATE_ERROR, TAG_FORMAT_ERROR, TAG_FORMAT_HELP } from "@/lib/tag-normalize";
+import { DEFAULT_PAGE_COLOR, PAGE_COLORS, resolvePageColor, type PageColorKey } from "@/lib/page-colors";
 import { TagPill } from "@/components/TagPill";
+import { ColorSwatchPicker } from "@/components/ColorSwatchPicker";
+import Link from "next/link";
 
-function TreeRow({ node }: { node: PageTreeNode }) {
+function ShelfRow({ node, noteCounts }: { node: PageTreeNode; noteCounts: Record<string, number> }) {
   return (
-    <div>
+    <>
       <Link
         href={`/pages/${node.tag}`}
-        className="flex items-center gap-2.5 border-t border-border-soft py-2 text-[13px] text-ink hover:bg-bg-suggestion"
-        style={{ paddingLeft: `${19 + node.depth * 20}px` }}
+        className="flex items-center gap-2.5 border-b border-border-soft py-[7px] text-[13px] text-ink hover:text-ink"
+        style={{ paddingLeft: `${(node.depth - 1) * 16}px` }}
       >
-        <span>{node.title}</span>
-        <TagPill tag={node.tag} className="px-[7px] py-[1px] text-[11px]" />
+        <span className={node.depth > 1 ? "text-ink-body" : undefined}>{node.title}</span>
+        <div className="flex-1" />
+        <span className="font-mono text-[10.5px] text-ink-faint">{noteCounts[node.id] ?? 0}</span>
       </Link>
       {node.children.map((child) => (
-        <TreeRow key={child.id} node={child} />
+        <ShelfRow key={child.id} node={child} noteCounts={noteCounts} />
       ))}
+    </>
+  );
+}
+
+function Shelf({ node, noteCounts }: { node: PageTreeNode; noteCounts: Record<string, number> }) {
+  const palette = PAGE_COLORS[resolvePageColor(node.color)];
+  return (
+    <div className="overflow-hidden rounded-[10px] border border-border">
+      <div
+        className="flex items-center gap-2.5 px-3.5 py-2.5"
+        style={{ backgroundColor: palette.tint, color: palette.ink }}
+      >
+        <Link href={`/pages/${node.tag}`} className="text-[13.5px] font-semibold">
+          {node.title}
+        </Link>
+        <span className="font-mono text-[11px] opacity-75">#{node.tag}</span>
+        <div className="flex-1" />
+        <span className="font-mono text-[10.5px] opacity-75">{noteCounts[node.id] ?? 0}</span>
+      </div>
+      <div className="px-3.5 pb-2.5 pt-1">
+        {node.children.length === 0 ? (
+          <p className="py-[7px] text-[13px] text-ink-faint">No sub-pages.</p>
+        ) : (
+          node.children.map((child) => <ShelfRow key={child.id} node={child} noteCounts={noteCounts} />)
+        )}
+      </div>
     </div>
   );
 }
 
-export function PageDirectory({ pages }: { pages: PageRow[] }) {
+export function PageDirectory({ pages, noteCounts }: { pages: PageRow[]; noteCounts: Record<string, number> }) {
   const [creating, setCreating] = useState(false);
   const [title, setTitle] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [parentId, setParentId] = useState("");
+  const [color, setColor] = useState<PageColorKey>(DEFAULT_PAGE_COLOR);
   const [fieldErrors, setFieldErrors] = useState<CreatePageFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -58,7 +88,7 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
     setFormError(null);
     setSaving(true);
     try {
-      const result = await createPage({ tag: tagInput, title, parentId: parentId || null });
+      const result = await createPage({ tag: tagInput, title, parentId: parentId || null, color });
       if (!result.ok) {
         if ("fieldErrors" in result) {
           setFieldErrors(result.fieldErrors);
@@ -70,6 +100,7 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
       setTitle("");
       setTagInput("");
       setParentId("");
+      setColor(DEFAULT_PAGE_COLOR);
       setCreating(false);
     } finally {
       setSaving(false);
@@ -79,7 +110,10 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
   return (
     <div className="px-10 pb-16 pt-9">
       <div className="flex items-baseline justify-between gap-3">
-        <h1 className="m-0 text-[26px] font-semibold tracking-[-0.02em] text-ink">Pages</h1>
+        <div className="flex items-baseline gap-3">
+          <h1 className="m-0 text-[26px] font-semibold tracking-[-0.02em] text-ink">Pages</h1>
+          <span className="font-mono text-[12px] text-ink-faint">{pages.length} pages</span>
+        </div>
         <button
           type="button"
           onClick={() => setCreating((c) => !c)}
@@ -121,12 +155,16 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
                 className="flex-1 rounded-md border border-border bg-bg px-2.5 py-1.5 font-mono text-ink outline-none"
               />
               {normalizedTag && (
-                <TagPill tag={normalizedTag} unmatched={!tagFormatValid} className="px-[7px] py-[1px] text-[11px]" />
+                <TagPill tag={normalizedTag} unmatched={!tagFormatValid} color={color} className="px-[7px] py-[1px] text-[11px]" />
               )}
             </div>
             <p className={`text-[11.5px] ${tagError ? "text-red-600" : "text-ink-faint"}`}>
               {tagError ?? TAG_FORMAT_HELP}
             </p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-[11.5px] text-ink-faint">Color</label>
+            <ColorSwatchPicker value={color} onChange={setColor} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[11.5px] text-ink-faint">Parent (optional, 3-level limit)</label>
@@ -163,11 +201,11 @@ export function PageDirectory({ pages }: { pages: PageRow[] }) {
         </form>
       )}
 
-      <div className="mt-5 border-t border-border">
+      <div className="mt-5 grid grid-cols-2 items-start gap-4 min-[1280px]:grid-cols-3">
         {tree.length === 0 ? (
-          <p className="border-t border-border-soft py-4 text-[13px] text-ink-faint">No pages yet.</p>
+          <p className="text-[13px] text-ink-faint">No pages yet.</p>
         ) : (
-          tree.map((node) => <TreeRow key={node.id} node={node} />)
+          tree.map((node) => <Shelf key={node.id} node={node} noteCounts={noteCounts} />)
         )}
       </div>
     </div>

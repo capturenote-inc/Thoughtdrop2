@@ -1,7 +1,7 @@
 # PHASES.md — ThoughtDrop MVP
 
 ```
-version: 1.1
+version: 1.2
 status: approved
 inputs: SPEC.md v1.4, DESIGN.md v1.0
 consumer: Claude Code (one phase per brief; do not start a phase until the
@@ -44,6 +44,38 @@ progress:
     handlers, not verified by testing -- automated keyboard-event dispatch
     does not reproduce browser-level reservation, so a passing automated
     check does not confirm a real keypress reaches the page.
+  - Phase 2.75 -- Restyle + colors + pins: CODE COMPLETE (2026-07-14),
+    branch-verified, CI green (58 tests). Design source: "Final assembly"
+    turn of the Claude Design project referenced in
+    docs/briefs/phase2.75-restyle.md, imported via the design MCP (the
+    local design/ bundle was stale for this phase). Implements: pages.color
+    + pages.pinned_at migrations (with a pin-limit trigger backstop, custom
+    SQLSTATE PN005); an 8-hue page-color palette in app code
+    (lib/page-colors.ts); TagPill renders in page color everywhere except
+    unmatched pills, which stay amber always; note card v2 (header band +
+    3px bottom edge) replacing row rendering in the notes drawer and both
+    Inbox states, with always-visible footer actions; shelves directory
+    replacing the flat page list; pin/unpin + a color swatch picker in the
+    page header; pinned-page chips in the top bar after a divider (cap 5,
+    "Unpin a page first — 5 max" on the 6th).
+    Accepted deviation: no "Suggest tag" button on untagged Inbox cards,
+    though the card-v2 mockup shows one -- that feature is Phase 6 (AI tag
+    suggestion) and isn't built yet; adding a styled-but-inert button would
+    repeat the exact search-stub mistake just fixed in the gate findings.
+    Migrations verified on a Supabase branch (advisors clean), then pushed
+    to production via `supabase db push --linked --yes` (2026-07-14);
+    production security advisors clean.
+  - GATE PENDING (Phase 2.75): Bryan's manual re-run covering the Phase 2
+    script plus: 3+ page colors with distinct pills everywhere; color
+    change propagates live; pin 5 pages, fail cleanly on the 6th, unpin
+    one; note cards readable in drawer and Inbox at 1440px and 1280px.
+    Phase 3 opens when both this gate and the still-pending Phase 2 gate
+    pass.
+  - Release hardening (2026-07-15): public Supabase signups disabled and
+    the app signup route/action removed because MVP is Bryan-only; CI now
+    runs the production build; the pin-limit trigger now takes a
+    transaction-scoped advisory lock per workspace before counting, closing
+    the concurrent-tab path that could otherwise exceed five pins.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

@@ -3,6 +3,8 @@
 @theme {
   --color-bg: #fbfaf7;
   --color-bg-modal: #fffefb;
+  --color-bg-card: #fffefb;
+  --color-card-header: #f7f5ef;
   --color-bg-suggestion: #fdfbf5;
   --color-ink: #21201c;
   --color-ink-body: #3b3830;

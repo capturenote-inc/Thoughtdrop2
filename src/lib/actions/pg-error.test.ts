@@ -10,6 +10,10 @@ describe("classifyPgError", () => {
     expect(classifyPgError("23514")).toBe("check_violation");
   });
 
+  it("classifies PN005 as pin_limit", () => {
+    expect(classifyPgError("PN005")).toBe("pin_limit");
+  });
+
   it("classifies anything else as unknown", () => {
     expect(classifyPgError("42501")).toBe("unknown");
     expect(classifyPgError("PGRST116")).toBe("unknown");

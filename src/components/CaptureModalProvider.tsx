@@ -8,6 +8,7 @@ interface PageOption {
   id: string;
   tag: string;
   title: string;
+  color: string;
 }
 
 type ModalState =

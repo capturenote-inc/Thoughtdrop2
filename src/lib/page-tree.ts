@@ -3,6 +3,7 @@ export interface PageTreeNode {
   tag: string;
   title: string;
   depth: number;
+  color: string;
   children: PageTreeNode[];
 }
 
@@ -12,11 +13,13 @@ export interface PageRow {
   title: string;
   parent_id: string | null;
   depth: number;
+  color: string;
+  pinned_at?: string | null;
 }
 
 export function buildPageTree(pages: PageRow[]): PageTreeNode[] {
   const nodes = new Map<string, PageTreeNode>();
-  pages.forEach((p) => nodes.set(p.id, { id: p.id, tag: p.tag, title: p.title, depth: p.depth, children: [] }));
+  pages.forEach((p) => nodes.set(p.id, { id: p.id, tag: p.tag, title: p.title, depth: p.depth, color: p.color, children: [] }));
 
   const roots: PageTreeNode[] = [];
   pages.forEach((p) => {

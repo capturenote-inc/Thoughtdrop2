@@ -5,6 +5,9 @@ import { getCurrentWorkspaceId } from "@/lib/workspace";
 import { isValidTag, normalizeTagInput, TAG_DUPLICATE_ERROR, TAG_FORMAT_ERROR } from "@/lib/tag-normalize";
 import { classifyPgError } from "@/lib/actions/pg-error";
 import { authenticatedAction } from "@/lib/actions/authenticated-action";
+import { DEFAULT_PAGE_COLOR, isPageColorKey } from "@/lib/page-colors";
+
+const PIN_LIMIT_ERROR = "Unpin a page first — 5 max";
 
 export interface CreatePageFieldErrors {
   title?: string;
@@ -22,10 +25,15 @@ export type CreatePageResult = { ok: true } | { ok: false; fieldErrors: CreatePa
 export const createPage = authenticatedAction(
   async (
     { supabase },
-    input: { tag: string; title: string; parentId: string | null }
+    input: { tag: string; title: string; parentId: string | null; color?: string }
   ): Promise<CreatePageResult> => {
     const title = input.title.trim();
     const tag = normalizeTagInput(input.tag);
+    // The picker only ever sends a known key; an unrecognized value (a
+    // stale client, or a direct call to this action) falls back to the
+    // default rather than surfacing a field error over a non-user-facing
+    // input.
+    const color = isPageColorKey(input.color) ? input.color : DEFAULT_PAGE_COLOR;
 
     const fieldErrors: CreatePageFieldErrors = {};
     if (!title) fieldErrors.title = "Title is required.";
@@ -43,6 +51,7 @@ export const createPage = authenticatedAction(
       tag,
       title,
       parent_id: input.parentId,
+      color,
     });
 
     if (error) {
@@ -150,3 +159,60 @@ export const createPageAndRouteNote = authenticatedAction(
 );
 
 export type CreatePageAndRouteActionResult = Awaited<ReturnType<typeof createPageAndRouteNote>>;
+
+export type PageActionResult = { ok: true } | { ok: false; error: string };
+
+export const setPageColor = authenticatedAction(
+  async ({ supabase }, pageId: string, color: string): Promise<PageActionResult> => {
+    if (!isPageColorKey(color)) return { ok: false, error: "Not a valid color." };
+
+    const { error } = await supabase.from("pages").update({ color }).eq("id", pageId);
+    if (error) throw error;
+
+    revalidatePath("/", "layout");
+    return { ok: true };
+  }
+);
+
+/**
+ * Checks the pin count before writing (cheap, avoids the round trip to the
+ * DB for the common case) but still relies on the pages_enforce_pin_limit
+ * trigger (migration 20260713200158) to catch the race where two pins
+ * land between the check and the write -- the check-then-act window here
+ * is not atomic on its own.
+ */
+export const pinPage = authenticatedAction(async ({ supabase }, pageId: string): Promise<PageActionResult> => {
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("workspace_id, pinned_at")
+    .eq("id", pageId)
+    .maybeSingle();
+  if (pageError) throw pageError;
+  if (!page) return { ok: false, error: "Page not found." };
+  if (page.pinned_at) return { ok: true };
+
+  const { count, error: countError } = await supabase
+    .from("pages")
+    .select("id", { count: "exact", head: true })
+    .eq("workspace_id", page.workspace_id)
+    .not("pinned_at", "is", null);
+  if (countError) throw countError;
+  if ((count ?? 0) >= 5) return { ok: false, error: PIN_LIMIT_ERROR };
+
+  const { error } = await supabase.from("pages").update({ pinned_at: new Date().toISOString() }).eq("id", pageId);
+  if (error) {
+    if (classifyPgError(error.code) === "pin_limit") return { ok: false, error: PIN_LIMIT_ERROR };
+    throw error;
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+});
+
+export const unpinPage = authenticatedAction(async ({ supabase }, pageId: string): Promise<PageActionResult> => {
+  const { error } = await supabase.from("pages").update({ pinned_at: null }).eq("id", pageId);
+  if (error) throw error;
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+});

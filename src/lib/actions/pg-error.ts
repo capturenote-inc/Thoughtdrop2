@@ -4,11 +4,13 @@
 
 export const PG_UNIQUE_VIOLATION = "23505";
 export const PG_CHECK_VIOLATION = "23514";
+export const PG_PIN_LIMIT = "PN005";
 
-export type PgErrorKind = "unique_violation" | "check_violation" | "unknown";
+export type PgErrorKind = "unique_violation" | "check_violation" | "pin_limit" | "unknown";
 
 export function classifyPgError(code: string | undefined | null): PgErrorKind {
   if (code === PG_UNIQUE_VIOLATION) return "unique_violation";
   if (code === PG_CHECK_VIOLATION) return "check_violation";
+  if (code === PG_PIN_LIMIT) return "pin_limit";
   return "unknown";
 }

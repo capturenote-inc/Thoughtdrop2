@@ -10,6 +10,7 @@ interface PageOption {
   id: string;
   tag: string;
   title: string;
+  color: string;
 }
 
 const TEXTAREA_STYLE =
@@ -130,7 +131,8 @@ export function CreateNoteModal({
           {leftmostTag && matchedPage && (
             <span className="flex items-center gap-1.5 text-ink-secondary">
               Files to
-              <TagPill tag={leftmostTag} className="px-[6px] py-[1px] text-[10.5px]" />→ {matchedPage.title}
+              <TagPill tag={leftmostTag} color={matchedPage.color} className="px-[6px] py-[1px] text-[10.5px]" />→{" "}
+              {matchedPage.title}
             </span>
           )}
           {leftmostTag && !matchedPage && (
