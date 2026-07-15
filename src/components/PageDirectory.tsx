@@ -52,8 +52,8 @@ function Shelf({ node, noteCounts }: { node: PageTreeNode; noteCounts: Record<st
   );
 }
 
-export function PageDirectory({ pages, noteCounts }: { pages: PageRow[]; noteCounts: Record<string, number> }) {
-  const [creating, setCreating] = useState(false);
+export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { pages: PageRow[]; noteCounts: Record<string, number>; autoOpenCreate?: boolean }) {
+  const [creating, setCreating] = useState(autoOpenCreate);
   const [title, setTitle] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [parentId, setParentId] = useState("");

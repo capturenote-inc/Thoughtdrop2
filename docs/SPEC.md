@@ -1,7 +1,7 @@
 # SPEC.md — ThoughtDrop
 
 ```
-version: 1.8
+version: 1.9
 status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
@@ -12,7 +12,9 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   the original MVP are build candidates rather than automatic deferrals. v1.8
   selects Focused Ledger as the visual direction: operational views are calm,
   structured lists; Pages are writing contexts; notes render as contextual
-  objects; light and dark appearance are first-class.
+  objects; light and dark appearance are first-class. v1.9 refines that
+  direction: capture is a compact writing surface, notes use a low-chrome
+  paper treatment, and the sidebar presents the actual collapsible page tree.
 ```
 
 ## Problem statement
@@ -32,6 +34,8 @@ Web application. A collapsible left rail orders Today, Inbox, Tasks, and
 Pages; the Pages collection expands in place and Capture is always visible.
 The Focused Ledger visual language favors restrained borders, dense task rows,
 and a neutral theme with a deliberate accent, in both light and dark modes.
+The Pages rail exposes the real parent/child hierarchy and provides distinct
+actions to manage pages and create a new page.
 Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
@@ -39,7 +43,9 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 - **Page**: a topic container identified by a globally unique hashtag (e.g. `#marketing`). Pages nest up to **three levels deep**. Nesting is represented by a `parent_id` reference on the page; tag uniqueness is enforced by a database unique constraint. Because tags are globally unique, nesting is organizational only and never affects routing. Each page has a **color** chosen from a fixed palette (user-picked at create/edit, default amber); the page's tag pill renders in that color wherever it appears. Unmatched tags (no owning page) always render in the default amber treatment.
 - **Note**: a captured thought containing zero or more hashtags. The UI keeps
   its routing context, capture time, and available actions with its body so it
-  reads as a meaningful object rather than an anonymous text row.
+  reads as a meaningful object rather than an anonymous text row. Capture and
+  note presentation should feel like writing surfaces, not oversized terminal
+  dialogs or generic dashboard cards.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.
 - **Routing**: any note containing `#tag` is automatically placed on the page owning that tag, per the rules below.

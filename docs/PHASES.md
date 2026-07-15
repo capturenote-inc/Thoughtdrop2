@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.5
+version: 1.6
 status: exploratory
-inputs: SPEC.md v1.8, DESIGN.md v1.0
+inputs: SPEC.md v1.9, DESIGN.md v1.0
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -100,6 +100,11 @@ progress:
     rail, capture surface, notes, Inbox, pages, and global tasks into the
     denser ledger language. Notes now retain context and actions in contained
     cards, while tasks use open/completed lists rather than a default board.
+  - Ledger correction (2026-07-15): replace the oversized capture panel with
+    a compact writing surface; remove generic note-card boxing in favor of a
+    low-chrome paper treatment; build the sidebar from real `parent_id`
+    hierarchy with per-parent collapse controls; add explicit Manage and New
+    page actions; increase light-theme page color contrast.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

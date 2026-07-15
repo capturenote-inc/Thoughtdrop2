@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentWorkspaceId } from "@/lib/workspace";
 import { PageDirectory } from "@/components/PageDirectory";
 
-export default async function PagesDirectory() {
+export default async function PagesDirectory({ searchParams }: { searchParams: Promise<{ new?: string }> }) {
+  const { new: createNew } = await searchParams;
   const supabase = await createClient();
   const workspaceId = await getCurrentWorkspaceId(supabase);
 
@@ -19,5 +20,5 @@ export default async function PagesDirectory() {
     if (note.page_id) noteCounts[note.page_id] = (noteCounts[note.page_id] ?? 0) + 1;
   }
 
-  return <PageDirectory pages={pages ?? []} noteCounts={noteCounts} />;
+  return <PageDirectory pages={pages ?? []} noteCounts={noteCounts} autoOpenCreate={createNew === "1"} />;
 }

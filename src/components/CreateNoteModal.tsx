@@ -14,7 +14,7 @@ interface PageOption {
 }
 
 const TEXTAREA_STYLE =
-  "min-h-[220px] w-full resize-none whitespace-pre-wrap break-words px-7 pt-6 text-[18px] leading-[1.65] font-sans";
+  "min-h-[156px] w-full resize-none whitespace-pre-wrap break-words px-6 py-5 text-[17px] leading-[1.7] font-sans";
 
 function HighlightedDraft({ draft }: { draft: string }) {
   const segments = segmentNoteBody(draft);
@@ -66,9 +66,8 @@ export function CreateNoteModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Native textareas don't grow with content; keep it (and the highlight
-  // backdrop, which stretches to match via absolute inset-0) in sync with
-  // scrollHeight so notes past the 150px minimum expand instead of scrolling.
+  // Native textareas don't grow with content; keep the writing surface and
+  // its tag highlight in sync without turning an empty capture into a wall.
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
@@ -112,9 +111,12 @@ export function CreateNoteModal({
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-scrim" onClick={onClose} />
-      <div className="absolute left-1/2 top-[9vh] w-[min(720px,calc(100vw-48px))] -translate-x-1/2 overflow-hidden rounded-xl border border-border-modal bg-bg-modal shadow-2xl">
-        <div className="border-b border-border-soft px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-ink">Quick capture</div>
-        <div className="relative">
+      <div className="absolute left-1/2 top-[14vh] w-[min(680px,calc(100vw-40px))] -translate-x-1/2 overflow-hidden rounded-2xl border border-border-modal bg-bg-modal shadow-2xl">
+        <div className="flex items-center justify-between px-6 pb-2 pt-5">
+          <span className="text-[13px] font-semibold text-ink">New thought</span>
+          <span className="font-mono text-[10px] text-ink-faint">esc to close</span>
+        </div>
+        <div className="relative mx-3 rounded-xl bg-card-header">
           <div aria-hidden className={`${TEXTAREA_STYLE} pointer-events-none absolute inset-0 pb-0 text-ink`}>
             <HighlightedDraft draft={draft} />
           </div>
@@ -122,12 +124,12 @@ export function CreateNoteModal({
             ref={textareaRef}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Type a thought… a #tag files it for you"
+            placeholder="Write it down. A #tag gives it a home."
             className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost`}
           />
         </div>
-        {error && <p className="px-7 pt-2 text-[11.5px] text-red-600">{error}</p>}
-        <div className="flex items-center gap-1.5 border-t border-border-soft px-7 pb-4 pt-3 text-[12px]">
+        {error && <p className="px-6 pt-2 text-[11.5px] text-red-600">{error}</p>}
+        <div className="mx-3 mb-3 mt-2 flex items-center gap-1.5 rounded-xl bg-card-header px-3 pb-3 pt-2 text-[12px]">
           {!leftmostTag && <span className="text-ink-faint">No tag? It lands in your Inbox.</span>}
           {leftmostTag && matchedPage && (
             <span className="flex items-center gap-1.5 text-ink-secondary">
@@ -143,11 +145,10 @@ export function CreateNoteModal({
             </span>
           )}
           <div className="flex-1" />
-          <span className="mr-3.5 font-mono text-[10px] text-ink-faint">esc</span>
           <button
             type="button"
             onClick={() => void save()}
-            disabled={saving}
+            disabled={saving || !draft.trim()}
             className="flex h-9 items-center gap-1.5 rounded-lg bg-amber px-4 text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
           >
             Save

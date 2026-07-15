@@ -26,7 +26,7 @@ export function NoteCard({
   footer: ReactNode;
 }) {
   return (
-    <article className="group rounded-lg border border-border bg-bg-card px-4 py-4 transition-colors hover:border-ink-ghost">
+    <article className="group rounded-r-xl border-l-[3px] border-l-amber bg-card-header/70 px-5 py-4 transition-colors hover:bg-card-header">
       <div className="flex items-center gap-2.5">
         {headerTag ? (
           <TagPill
@@ -42,7 +42,7 @@ export function NoteCard({
         <div className="flex-1" />
         <span className="font-mono text-[10.5px] text-ink-faint">{formatRelativeTime(createdAt)}</span>
       </div>
-      <div className="max-w-4xl py-3 text-[14px] leading-[1.65] text-ink-body">
+      <div className="max-w-4xl py-3 text-[15px] leading-[1.7] text-ink-body">
         <NoteBody body={body} unmatched={headerTag?.unmatched} hideRoutingTagPill />
       </div>
       <div className="flex items-center gap-3.5 text-[12px]">{footer}</div>
