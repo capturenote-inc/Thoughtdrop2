@@ -14,7 +14,7 @@ interface PageOption {
 }
 
 const TEXTAREA_STYLE =
-  "min-h-[150px] w-full resize-none whitespace-pre-wrap break-words px-5 pt-[18px] text-[14.5px] leading-[1.6] font-sans";
+  "min-h-[220px] w-full resize-none whitespace-pre-wrap break-words px-7 pt-6 text-[18px] leading-[1.65] font-sans";
 
 function HighlightedDraft({ draft }: { draft: string }) {
   const segments = segmentNoteBody(draft);
@@ -112,7 +112,8 @@ export function CreateNoteModal({
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-scrim" onClick={onClose} />
-      <div className="absolute left-1/2 top-[72px] w-[520px] -translate-x-1/2 overflow-hidden rounded-[10px] border border-border-modal bg-bg-modal">
+      <div className="absolute left-1/2 top-[9vh] w-[min(720px,calc(100vw-48px))] -translate-x-1/2 overflow-hidden rounded-[18px] border border-border-modal bg-bg-modal shadow-[0_30px_80px_rgb(23_23_19_/_0.22)]">
+        <div className="border-b border-border-soft px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-ink">Quick capture</div>
         <div className="relative">
           <div aria-hidden className={`${TEXTAREA_STYLE} pointer-events-none absolute inset-0 pb-0 text-ink`}>
             <HighlightedDraft draft={draft} />
@@ -125,8 +126,8 @@ export function CreateNoteModal({
             className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost`}
           />
         </div>
-        {error && <p className="px-5 pt-2 text-[11.5px] text-red-600">{error}</p>}
-        <div className="flex items-center gap-1.5 px-5 pb-[14px] pt-[10px] text-[11.5px]">
+        {error && <p className="px-7 pt-2 text-[11.5px] text-red-600">{error}</p>}
+        <div className="flex items-center gap-1.5 border-t border-border-soft px-7 pb-4 pt-3 text-[12px]">
           {!leftmostTag && <span className="text-ink-faint">No tag? It lands in your Inbox.</span>}
           {leftmostTag && matchedPage && (
             <span className="flex items-center gap-1.5 text-ink-secondary">
@@ -147,7 +148,7 @@ export function CreateNoteModal({
             type="button"
             onClick={() => void save()}
             disabled={saving}
-            className="flex h-7 items-center gap-1.5 rounded-md bg-amber px-[13px] text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
+            className="flex h-9 items-center gap-1.5 rounded-xl bg-amber px-4 text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
           >
             Save
             <span className="font-mono text-[10px] font-normal opacity-75">⌘↵</span>

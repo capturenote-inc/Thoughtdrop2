@@ -1,33 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #fbfaf7;
-  --color-bg-modal: #fffefb;
-  --color-bg-card: #fffefb;
-  --color-card-header: #f7f5ef;
-  --color-bg-suggestion: #fdfbf5;
-  --color-ink: #21201c;
-  --color-ink-body: #3b3830;
-  --color-ink-secondary: #6e6a61;
-  --color-ink-faint: #a6a198;
-  --color-ink-ghost: #c4bfb4;
-  --color-border: #e9e5dc;
-  --color-border-soft: #f1eee6;
-  --color-border-modal: #e0dcd2;
-  --color-amber: #c2701a;
-  --color-amber-hover: #b0650f;
-  --color-amber-ink: #96590f;
-  --color-amber-tint: #f8ecda;
-  --color-amber-dashed: #e0b072;
-  --color-on-amber: #fffdf9;
-  --color-scrim: rgb(33 32 28 / 0.18);
+  --color-bg: #f7f5f1;
+  --color-bg-modal: #fffdf9;
+  --color-bg-card: #fffdf9;
+  --color-card-header: #f1eee8;
+  --color-bg-suggestion: #fff7ed;
+  --color-ink: #171713;
+  --color-ink-body: #39372f;
+  --color-ink-secondary: #6e6a60;
+  --color-ink-faint: #969187;
+  --color-ink-ghost: #bbb5aa;
+  --color-border: #e3dfd7;
+  --color-border-soft: #ece8e1;
+  --color-border-modal: #d8d2c8;
+  --color-amber: #d95d21;
+  --color-amber-hover: #bd4914;
+  --color-amber-ink: #9a3e13;
+  --color-amber-tint: #f9e5d9;
+  --color-amber-dashed: #d99572;
+  --color-on-amber: #fffaf5;
+  --color-rail: #1b1a17;
+  --color-rail-muted: #a9a59d;
+  --color-rail-line: #36342e;
+  --color-scrim: rgb(23 23 19 / 0.34);
 
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
 }

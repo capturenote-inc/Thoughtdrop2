@@ -2,20 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, type ReactNode } from "react";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
 import { PAGE_COLORS, resolvePageColor } from "@/lib/page-colors";
-
-function NavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      className={active ? "font-medium text-ink" : "text-ink-secondary hover:text-ink"}
-    >
-      {children}
-    </Link>
-  );
-}
 
 interface PinnedPage {
   id: string;
@@ -24,107 +14,99 @@ interface PinnedPage {
   color: string;
 }
 
-export function TopBar({
-  untriagedCount,
-  pinnedPages,
-}: {
-  untriagedCount: number;
-  pinnedPages: PinnedPage[];
-}) {
+function RailIcon({ children }: { children: ReactNode }) {
+  return <span className="grid h-5 w-5 shrink-0 place-items-center" aria-hidden>{children}</span>;
+}
+
+function PagesIcon() {
+  return <RailIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-[18px] w-[18px]"><path d="M4 5.8A2.8 2.8 0 0 1 6.8 3H20v15.2A2.8 2.8 0 0 0 17.2 15H4z"/><path d="M4 5.8V21h13.2A2.8 2.8 0 0 1 20 18.2"/></svg></RailIcon>;
+}
+
+function TaskIcon() {
+  return <RailIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-[18px] w-[18px]"><path d="m5 12 4 4L19 6"/></svg></RailIcon>;
+}
+
+function InboxIcon() {
+  return <RailIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-[18px] w-[18px]"><path d="M4 5h16v14H4z"/><path d="M4 13h4l1.6 2h4.8l1.6-2h4"/></svg></RailIcon>;
+}
+
+function PlusIcon() {
+  return <RailIcon><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-[18px] w-[18px]"><path d="M12 5v14M5 12h14"/></svg></RailIcon>;
+}
+
+function RailLink({ href, active, expanded, label, icon, badge }: { href: string; active: boolean; expanded: boolean; label: string; icon: ReactNode; badge?: number }) {
+  return (
+    <Link
+      href={href}
+      title={expanded ? undefined : label}
+      className={`relative flex h-10 items-center rounded-xl px-[11px] text-[13px] transition-colors ${active ? "bg-white/10 text-white" : "text-rail-muted hover:bg-white/[0.06] hover:text-white"}`}
+    >
+      {icon}
+      {expanded && <span className="ml-3 truncate">{label}</span>}
+      {badge && badge > 0 ? (
+        <span className={`ml-auto grid min-w-5 place-items-center rounded-full bg-amber px-1.5 py-0.5 font-mono text-[10px] text-on-amber ${expanded ? "" : "absolute -right-1 -top-1"}`}>{badge}</span>
+      ) : null}
+    </Link>
+  );
+}
+
+export function TopBar({ untriagedCount, pinnedPages }: { untriagedCount: number; pinnedPages: PinnedPage[] }) {
   const pathname = usePathname();
   const { openCreate } = useCaptureModal();
+  const [expanded, setExpanded] = useState(false);
 
-  const isPages = pathname === "/" || pathname.startsWith("/pages");
+  const isPages = pathname.startsWith("/pages");
   const isTasks = pathname.startsWith("/tasks");
   const isInbox = pathname.startsWith("/inbox");
 
   return (
-    <div className="flex h-12 items-center gap-6 border-b border-border px-6 text-[13px]">
-      <Link href="/" className="flex items-center gap-2">
-        <span className="h-4 w-4 rounded-[3px] bg-amber" />
-        <span className="text-[13.5px] font-semibold tracking-[-0.01em] text-ink">ThoughtDrop</span>
-      </Link>
-
-      <div className="flex items-center gap-5">
-        <NavLink href="/pages" active={isPages}>
-          Pages
-        </NavLink>
-        <NavLink href="/tasks" active={isTasks}>
-          Tasks
-        </NavLink>
-        <Link
-          href="/inbox"
-          className={`flex items-center gap-1.5 ${isInbox ? "font-medium text-ink" : "text-ink-secondary hover:text-ink"}`}
-        >
-          Inbox
-          {untriagedCount > 0 && (
-            <span className="rounded-full bg-amber-tint px-1.5 py-px font-mono text-[10.5px] text-amber-ink">
-              {untriagedCount}
-            </span>
-          )}
+    <aside className={`sticky top-0 z-20 flex h-dvh shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[width] duration-200 ${expanded ? "w-[232px]" : "w-[76px]"}`}>
+      <div className="mb-5 flex items-center justify-between">
+        <Link href="/" title="ThoughtDrop" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber text-[17px] font-bold text-on-amber">
+          T
         </Link>
+        {expanded && <span className="mr-auto ml-3 text-[14px] font-semibold tracking-[-0.02em] text-white">ThoughtDrop</span>}
+        <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="grid h-8 w-8 place-items-center rounded-lg text-rail-muted hover:bg-white/[0.06] hover:text-white">
+          <span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span>
+        </button>
       </div>
 
+      <button type="button" onClick={openCreate} title={expanded ? undefined : "Capture a thought"} className={`mb-5 flex h-11 items-center rounded-xl bg-amber text-[13px] font-semibold text-on-amber shadow-[0_8px_20px_rgb(217_93_33_/_0.18)] transition-colors hover:bg-amber-hover ${expanded ? "px-[11px]" : "justify-center"}`}>
+        <PlusIcon />
+        {expanded && <><span className="ml-3">Capture</span><span className="ml-auto font-mono text-[10px] font-normal opacity-75">⌘K</span></>}
+      </button>
+
+      <nav className="space-y-1" aria-label="Primary navigation">
+        <RailLink href="/pages" active={isPages} expanded={expanded} label="Pages" icon={<PagesIcon />} />
+        <RailLink href="/tasks" active={isTasks} expanded={expanded} label="Tasks" icon={<TaskIcon />} />
+        <RailLink href="/inbox" active={isInbox} expanded={expanded} label="Inbox" icon={<InboxIcon />} badge={untriagedCount} />
+      </nav>
+
       {pinnedPages.length > 0 && (
-        <>
-          <div className="h-5 w-px shrink-0 bg-border" />
-          <div className="flex min-w-0 shrink items-center gap-[7px] overflow-hidden">
+        <div className="mt-7 border-t border-rail-line pt-4">
+          {expanded && <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.13em] text-rail-muted">Pinned</p>}
+          <div className="space-y-1">
             {pinnedPages.map((page) => {
               const palette = PAGE_COLORS[resolvePageColor(page.color)];
               const active = pathname === `/pages/${page.tag}`;
               return (
-                <Link
-                  key={page.id}
-                  href={`/pages/${page.tag}`}
-                  className={`flex h-6 shrink-0 items-center whitespace-nowrap rounded-full px-2.5 text-[12.5px] ${active ? "font-medium" : ""}`}
-                  style={{ backgroundColor: palette.tint, color: palette.ink }}
-                >
-                  {page.title}
+                <Link key={page.id} href={`/pages/${page.tag}`} title={expanded ? undefined : page.title} className={`flex h-9 items-center rounded-lg px-[11px] text-[12.5px] ${active ? "bg-white/10 text-white" : "text-rail-muted hover:bg-white/[0.06] hover:text-white"}`}>
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: palette.ink }} />
+                  {expanded && <span className="ml-3 truncate">{page.title}</span>}
                 </Link>
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
-      <div className="flex-1" />
-
-      {/* Visibly inactive, not just unresponsive: Phase 5 builds real
-          search. A styled-but-dead input (previously readOnly, with a "/"
-          hint that focused it into nowhere) reads as broken, not
-          unfinished -- disabled + reduced opacity + a tooltip reads as
-          "not yet". The "/" focus shortcut is gone with it: a shortcut
-          that focuses a dead input is the same lie twice. Narrowed from
-          260 to 220px per the final-assembly design: pins take the space. */}
-      <div
-        title="Search coming soon"
-        className="flex h-7 w-[220px] shrink-0 cursor-not-allowed items-center gap-2 rounded-md border border-border px-2.5 text-[12.5px] text-ink-faint opacity-50"
-      >
-        <input
-          type="text"
-          placeholder="Search"
-          disabled
-          className="w-full cursor-not-allowed bg-transparent outline-none placeholder:text-ink-faint"
-        />
+      <div className="mt-auto border-t border-rail-line pt-3">
+        <form action={logout}>
+          <button type="submit" title={expanded ? undefined : "Sign out"} className={`flex h-9 w-full items-center rounded-lg px-[11px] text-[12px] text-rail-muted hover:bg-white/[0.06] hover:text-white ${expanded ? "" : "justify-center"}`}>
+            <span aria-hidden className="text-base">↗</span>{expanded && <span className="ml-3">Sign out</span>}
+          </button>
+        </form>
       </div>
-
-      <button
-        type="button"
-        onClick={openCreate}
-        className="flex h-[30px] items-center gap-2 rounded-md bg-amber px-3.5 text-[13px] font-semibold text-on-amber hover:bg-amber-hover"
-      >
-        Create Note
-        <span className="font-mono text-[10px] font-normal opacity-75">⌘K</span>
-      </button>
-
-      {/* Not part of the approved design (2b has no account/session
-          control) -- kept minimal so it doesn't compete with Create Note
-          as the bar's one filled element. */}
-      <form action={logout}>
-        <button type="submit" className="text-[11px] text-ink-faint hover:text-ink-secondary">
-          Sign out
-        </button>
-      </form>
-    </div>
+    </aside>
   );
 }

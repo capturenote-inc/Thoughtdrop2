@@ -21,9 +21,9 @@ export function NotesDrawer({
   pageTag: string;
   pageColor: PageColorKey;
 }) {
-  // Session-only: never persisted per page (DESIGN.md D1 / SPEC vs. the
-  // design README's "persist per page" note -- SPEC/DESIGN win on behavior).
-  const [open, setOpen] = useState(false);
+  // Session-only: never persisted per page. The stream starts open so a page
+  // with captured thoughts never looks empty before Phase 3 adds blocks.
+  const [open, setOpen] = useState(true);
   const { openEdit } = useCaptureModal();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -36,21 +36,24 @@ export function NotesDrawer({
   }
 
   return (
-    <div className="mx-10 mt-5 border-t border-b border-border">
+    <section className="mx-auto mt-10 max-w-[1240px] px-8 lg:px-12">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex h-9 items-center gap-2.5 text-[12.5px] text-ink-secondary"
+        aria-expanded={open}
+        className="flex h-10 items-center gap-3 text-[13px] text-ink-secondary hover:text-ink"
       >
-        <span className="text-[9px] text-ink-faint">{open ? "▼" : "▶"}</span>
-        <span className="font-medium text-ink">Notes</span>
-        <span className="font-mono text-[11px] text-ink-faint">({notes.length})</span>
+        <span className="grid h-5 w-5 place-items-center rounded-full border border-border text-[11px] text-ink-faint" aria-hidden>{open ? "−" : "+"}</span>
+        <span className="font-semibold text-ink">Recent notes</span>
+        <span className="font-mono text-[11px] text-ink-faint">{notes.length}</span>
       </button>
 
       {open && (
-        <div className="grid grid-cols-2 gap-3.5 pb-4 min-[1280px]:grid-cols-3">
-          {notes.map((note) => (
-            <div key={note.id} className="flex flex-col gap-1.5">
+        <div className="border-t border-border pb-3">
+          {notes.length === 0 ? (
+            <p className="py-6 text-[14px] text-ink-faint">Nothing has landed here yet. Capture a thought with #{pageTag} to start this page.</p>
+          ) : notes.map((note) => (
+            <div key={note.id} className="flex flex-col gap-1">
               <NoteCard
                 body={note.body}
                 createdAt={note.created_at}
@@ -66,11 +69,11 @@ export function NotesDrawer({
                   </>
                 }
               />
-              {errors[note.id] && <p className="px-1 text-[11.5px] text-red-600">{errors[note.id]}</p>}
+              {errors[note.id] && <p className="pt-1 text-[11.5px] text-red-600">{errors[note.id]}</p>}
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

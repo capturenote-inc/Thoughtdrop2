@@ -51,16 +51,19 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
   }
 
   return (
-    <div className="mx-10 mb-12 mt-3.5">
+    <div className="mx-auto mb-16 mt-7 max-w-[1240px] px-8 lg:px-12">
       {notes.length === 0 ? (
-        <p className="border-t border-border-soft py-4 text-[13px] text-ink-faint">Inbox is empty.</p>
+        <div className="border-y border-border py-12">
+          <p className="text-[17px] font-medium text-ink">Your Inbox is clear.</p>
+          <p className="mt-1 text-[14px] text-ink-faint">Untagged and unmatched thoughts wait here for a decision.</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 border-t border-border pt-4 md:grid-cols-2">
+        <div>
           {notes.map((note) => {
             const unmatched = note.routing_unmatched && Boolean(note.routing_tag);
             const error = errors[note.id];
             return (
-              <div key={note.id} className="flex flex-col gap-1.5">
+                <div key={note.id} className="flex flex-col gap-1">
                 <NoteCard
                   body={note.body}
                   createdAt={note.created_at}
@@ -101,7 +104,7 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                     )
                   }
                 />
-                {error && <p className="px-1 text-[11.5px] text-red-600">{error}</p>}
+                {error && <p className="pt-1 text-[11.5px] text-red-600">{error}</p>}
               </div>
             );
           })}

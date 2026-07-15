@@ -28,8 +28,8 @@ export function NoteCard({
   footer: ReactNode;
 }) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-[10px] border border-border-modal border-b-[3px] bg-bg-card">
-      <div className="flex items-center gap-2.5 border-b border-border-soft bg-card-header px-3.5 py-2">
+    <article className="group border-b border-border py-5 first:border-t">
+      <div className="flex items-center gap-2.5">
         {headerTag ? (
           <TagPill
             tag={headerTag.tag}
@@ -44,10 +44,10 @@ export function NoteCard({
         <div className="flex-1" />
         <span className="font-mono text-[10.5px] text-ink-faint">{formatRelativeTime(createdAt)}</span>
       </div>
-      <div className="px-3.5 py-3 text-[13.5px] leading-[1.55] text-ink-body">
+      <div className="max-w-4xl py-3 text-[15px] leading-[1.65] text-ink-body">
         <NoteBody body={body} unmatched={headerTag?.unmatched} hideRoutingTagPill />
       </div>
-      <div className="flex items-center gap-3.5 px-3.5 pb-[11px] text-[12px]">{footer}</div>
-    </div>
+      <div className="flex items-center gap-3.5 text-[12px]">{footer}</div>
+    </article>
   );
 }

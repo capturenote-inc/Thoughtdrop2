@@ -1,7 +1,7 @@
 # PHASES.md — ThoughtDrop MVP
 
 ```
-version: 1.2
+version: 1.3
 status: approved
 inputs: SPEC.md v1.4, DESIGN.md v1.0
 consumer: Claude Code (one phase per brief; do not start a phase until the
@@ -76,6 +76,11 @@ progress:
     runs the production build; the pin-limit trigger now takes a
     transaction-scoped advisory lock per workspace before counting, closing
     the concurrent-tab path that could otherwise exceed five pins.
+  - Design reset (2026-07-15): Phase 2.9 proposal recorded in
+    docs/briefs/phase2.9-design-reset.md. It replaces the "Paper Quiet"
+    visual direction with "Studio Desk" while preserving the MVP's capture
+    and routing behavior. It is a visual/interaction pass, not a feature
+    expansion, and must ship before the combined Phase 2 / 2.75 gate re-run.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
@@ -119,6 +124,27 @@ progress:
 6. Note edit and delete everywhere a note renders; editing re-runs routing per SPEC rules (stories 13, 14, 15).
 
 **Verify**: manual script — capture tagged note → appears in target page drawer; capture untagged → Inbox; capture unmatched tag → Inbox with triage actions; Create #tag routes it; edit a note's tag → re-routes; delete works from page and Inbox.
+
+## Phase 2.9 — Product shell and visual reset
+
+**Goal**: make the completed capture loop feel like a contemporary personal
+thinking workspace before more capability is added.
+
+1. Implement the Studio Desk app shell from
+   `docs/briefs/phase2.9-design-reset.md`: compact/expandable left rail,
+   one persistent Capture action, existing navigation, Inbox count, and
+   pinned pages. Remove the disabled Search control until Phase 5 ships it.
+2. Establish the new visual tokens and type scale; then restyle the capture
+   composer, Inbox, page header, visible notes stream, and page directory.
+   Keep every Phase 2 and 2.75 behavior and server action intact.
+3. Do not build Today data, tasks, blocks, AI, search, mobile layouts, or
+   other new features in this phase. Phase 4 owns the real Today surface.
+4. Run the combined Phase 2 / 2.75 manual functional gate after the restyle,
+   then visual QA at 1440×900 and 1280×800 with representative data.
+
+**Verify**: capture is the first obvious action on every screen; an existing
+page opens with notes visibly present; navigation remains clear and unbroken
+at 1280px; all existing functional gate steps pass.
 
 ## Phase 3 — Page composition
 
