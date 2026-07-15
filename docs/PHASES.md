@@ -1,11 +1,11 @@
-# PHASES.md — ThoughtDrop MVP
+# PHASES.md — ThoughtDrop
 
 ```
-version: 1.3
-status: approved
-inputs: SPEC.md v1.4, DESIGN.md v1.0
-consumer: Claude Code (one phase per brief; do not start a phase until the
-  previous phase's verification passes)
+version: 1.4
+status: exploratory
+inputs: SPEC.md v1.7, DESIGN.md v1.0
+consumer: implementation agents (phases are sequencing guides, not hard
+  scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
   - Phase 0: DONE, verified by Bryan on production 2026-07-09
   - Phase 1: DONE (2026-07-09), incl. Phase 1.5 fix list (6/6 items).
@@ -85,13 +85,20 @@ progress:
     is Today, Inbox, Tasks, Pages. Pages is an expandable sidebar collection
     with pinned pages ordered first. Today may use current real data in Phase
     2.9; Phase 4 extends it rather than replacing it.
+  - Product mode decision (2026-07-15): MVP compliance is removed. The app
+    is an exploratory fun project; original non-goals and phase order inform
+    sequencing but do not prohibit work. Functional verification remains
+    required for changed flows, while manual gates are useful feedback rather
+    than blockers for the next idea.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
 
 - **Stack**: Next.js (App Router) + TypeScript + Tailwind, Supabase (auth + Postgres + RLS), Vercel deploy, GitHub repo.
 - **AI provider (SPEC open question 1)**: Anthropic API, cheapest available model tier, on-demand only (user clicks to request a suggestion). Confirm at Phase 6 start.
-- **Team-readiness**: every content table carries `workspace_id` from day one; RLS policies scope by workspace membership. One workspace, one member in MVP. No team UI.
+- **Workspace foundation**: every content table carries `workspace_id` and
+  RLS scopes by workspace membership. The current product is single-user, but
+  collaboration and team UI are available future directions when desired.
 
 ## Phase 0 — Scaffold, auth, deploy
 

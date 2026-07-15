@@ -1,13 +1,15 @@
-# SPEC.md — ThoughtDrop MVP
+# SPEC.md — ThoughtDrop
 
 ```
-version: 1.6
-status: approved
+version: 1.7
+status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
   design iteration: up to 5 pages pinnable to the top bar (schema adds
   pages.pinned_at). Home screen design ("Dashboard") produced early by the
-  design iteration; build remains Phase 4.
+  design iteration; build remains Phase 4. v1.7 removes MVP compliance as a
+  planning constraint: this is a fun, exploratory project and ideas outside
+  the original MVP are build candidates rather than automatic deferrals.
 ```
 
 ## Problem statement
@@ -16,12 +18,16 @@ Existing note tools (Notion et al.) force manual filing and waste screen real es
 
 ## Target user
 
-MVP: Bryan, single user, as daily-driver replacement for his current note tool.
-Architecture constraint: the data model must anticipate small teams (multi-user, personal + shared pages) without rework. No team-facing features ship in the MVP.
+Bryan, building a personal thinking workspace that can become whatever proves
+useful in practice. The current account is single-user; the existing
+workspace-aware data model remains a useful foundation, not a restriction on
+future collaboration or personal workflows.
 
 ## Product shape
 
-Web application. Top bar navigation (no sidebar): logo/home button, Dashboard (Home), page directory, global task view, Inbox, search, up to 5 user-pinned pages, and an always-visible Create Note button. Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
+Web application. A collapsible left rail orders Today, Inbox, Tasks, and
+Pages; the Pages collection expands in place and Capture is always visible.
+Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
 
@@ -63,10 +69,15 @@ If re-evaluation runs and the new routing tag matches no page, or no tag remains
 13. As a user, I can edit the content of any note or task after capture. Editing a note re-runs routing per the routing rules.
 14. As a user, I can delete any note or task, from its page, the Inbox, or the global task view.
 15. As a user, when editing changes a note's routing tag, the note re-routes to the page owning the new routing tag (or to the Inbox if no tag remains or it is unmatched).
-16. As a user, I can open a page directory from the top bar showing all my pages and their nesting, and navigate to any page from it.
-17. As a user, I can pin up to 5 pages to the top bar for one-click access, and unpin them. Attempting a 6th pin explains the limit.
+16. As a user, I can open the Pages collection from the sidebar, see all my pages and their nesting, and navigate to any page from it.
+17. As a user, I can pin up to 5 pages to the expanded Pages collection for one-click access, and unpin them. Attempting a 6th pin explains the limit.
 
-## Explicit non-goals (post-MVP)
+## Idea backlog, not exclusions
+
+The original non-goals below are useful for sequencing and design discussion,
+but none is a standing prohibition. Bryan may pull any item into active work
+when it is interesting or useful. New ideas receive a concrete brief and
+implementation plan rather than an automatic "out of scope" label.
 
 - Team features: multi-user access, invites, sharing, permissions, shared pages. (Data model must anticipate them; UI must not.)
 - Free-form grid layout (drag blocks anywhere). MVP is columns only.
@@ -79,11 +90,14 @@ If re-evaluation runs and the new routing tag matches no page, or no tag remains
 - Mobile app or mobile-optimized layout. MVP targets desktop browsers.
 - Offline mode, import/export, notifications, reminders.
 
-## Success criteria
+## Current working objectives
 
 1. All core flows function without blocking bugs: capture, tag routing, Inbox triage (create page / fix tag), page composition with the three block types, task lifecycle (create → status changes → done), global task view, search, AI tag suggestion. **Blocking** means: data loss, a mis-route that cannot be corrected by editing the note, auth failure, or the capture flow being unavailable. Cosmetic or workaround-able issues are non-blocking.
-2. Bryan uses ThoughtDrop as his daily note/task driver for 14 consecutive days. "Fully replacing" means **zero new notes or tasks created in the old tool during the window** (reading old content is fine). Objective floors: activity on ≥12 of the 14 days, ≥5 captures (notes or tasks) on a typical day, zero data-loss incidents.
-3. Both conditions must hold. Flows working without adoption, or adoption despite broken flows, is failure.
+2. Bryan uses ThoughtDrop often enough to expose what deserves to be built
+next. A 14-day daily-driver run remains valuable evidence, but it is not a
+binary release gate.
+3. New work improves either capture, recall, organization, expression, or
+the pleasure of using the product without compromising data integrity.
 
 ## Open questions (for downstream roles, not blockers)
 
