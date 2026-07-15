@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.7
+version: 1.8
 status: exploratory
-inputs: SPEC.md v1.10, DESIGN.md v1.0
+inputs: SPEC.md v1.11, DESIGN.md v1.0
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -110,6 +110,9 @@ progress:
     is removed in favor of an explicit New page action. Notes gain a
     `pinned_at` migration, Pin/Unpin actions, pinned-first Page and Inbox
     ordering, and a pinned state label.
+  - Brand direction (2026-07-15): ThoughtDrop adopts a bespoke, compact owl
+    mark in the sidebar. It captures the quiet thinking-companion feeling
+    without using the Codex companion artwork as product branding.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

@@ -7,6 +7,7 @@ import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
 import { PAGE_COLORS, resolvePageColor } from "@/lib/page-colors";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThoughtdropMark } from "@/components/ThoughtdropMark";
 import { buildPageTree, type PageTreeNode } from "@/lib/page-tree";
 
 interface SidebarPage {
@@ -144,7 +145,9 @@ export function TopBar({ untriagedCount, pages }: { untriagedCount: number; page
   return (
     <aside className={`sticky top-0 z-20 flex h-dvh shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[width] duration-200 ${expanded ? "w-[240px]" : "w-[68px]"}`}>
       <div className="mb-5 flex items-center justify-between">
-        <Link href="/" title="ThoughtDrop" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-rail-ink text-[15px] font-bold text-rail">T</Link>
+        <Link href="/" title="ThoughtDrop home" aria-label="ThoughtDrop home" className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-rail-ink text-rail shadow-sm transition-transform hover:scale-[1.03]">
+          <ThoughtdropMark className="h-[25px] w-[25px]" />
+        </Link>
         {expanded && <span className="mr-auto ml-3 text-[14px] font-semibold tracking-[-0.02em] text-rail-ink">ThoughtDrop</span>}
         <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="grid h-8 w-8 place-items-center rounded-md text-rail-muted hover:bg-rail-active hover:text-rail-ink"><span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span></button>
       </div>

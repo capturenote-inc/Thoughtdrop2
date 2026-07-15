@@ -16,7 +16,10 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   direction: capture is a compact writing surface, notes use a low-chrome
   paper treatment, and the sidebar presents the actual collapsible page tree.
   v1.10 makes page pins visible as sidebar quick access and adds persistent
-  note pins that sort important notes first in their Page or Inbox.
+  note pins that sort important notes first in their Page or Inbox. v1.11
+  establishes an original ThoughtDrop owl mark as the product identity,
+  inspired by the idea of a quiet thinking companion without reusing the
+  Codex companion artwork.
 ```
 
 ## Problem statement
@@ -39,6 +42,9 @@ and a neutral theme with a deliberate accent, in both light and dark modes.
 The Pages rail exposes the real parent/child hierarchy and provides distinct
 navigation to Pages and to create a new page. Pinned pages appear in a
 dedicated quick-access section above the tree.
+ThoughtDrop uses an original compact owl mark in the navigation rail: warm,
+observant, and notebook-adjacent in spirit while remaining visually distinct
+from any third-party mascot.
 Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
