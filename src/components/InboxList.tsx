@@ -51,14 +51,14 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
   }
 
   return (
-    <div className="mx-auto mb-16 mt-7 max-w-[1240px] px-8 lg:px-12">
+    <div className="mx-auto mb-16 mt-7 max-w-[1080px] px-6 lg:px-10">
       {notes.length === 0 ? (
         <div className="border-y border-border py-12">
           <p className="text-[17px] font-medium text-ink">Your Inbox is clear.</p>
           <p className="mt-1 text-[14px] text-ink-faint">Untagged and unmatched thoughts wait here for a decision.</p>
         </div>
       ) : (
-        <div>
+        <div className="space-y-3">
           {notes.map((note) => {
             const unmatched = note.routing_unmatched && Boolean(note.routing_tag);
             const error = errors[note.id];

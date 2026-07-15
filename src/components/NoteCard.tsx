@@ -11,10 +11,8 @@ export interface NoteCardTag {
 }
 
 /**
- * Card v2 (design turn 4c): one component, two contexts (page drawer,
- * Inbox). Header band carries the routing tag (or an untagged/unmatched
- * label) + timestamp; footer actions belong to the card and are always
- * visible, never hover-only.
+ * A note carries more than its text: its home, time, and available next
+ * actions stay together in one durable object across Inbox and Pages.
  */
 export function NoteCard({
   body,
@@ -28,7 +26,7 @@ export function NoteCard({
   footer: ReactNode;
 }) {
   return (
-    <article className="group border-b border-border py-5 first:border-t">
+    <article className="group rounded-lg border border-border bg-bg-card px-4 py-4 transition-colors hover:border-ink-ghost">
       <div className="flex items-center gap-2.5">
         {headerTag ? (
           <TagPill
@@ -44,7 +42,7 @@ export function NoteCard({
         <div className="flex-1" />
         <span className="font-mono text-[10.5px] text-ink-faint">{formatRelativeTime(createdAt)}</span>
       </div>
-      <div className="max-w-4xl py-3 text-[15px] leading-[1.65] text-ink-body">
+      <div className="max-w-4xl py-3 text-[14px] leading-[1.65] text-ink-body">
         <NoteBody body={body} unmatched={headerTag?.unmatched} hideRoutingTagPill />
       </div>
       <div className="flex items-center gap-3.5 text-[12px]">{footer}</div>

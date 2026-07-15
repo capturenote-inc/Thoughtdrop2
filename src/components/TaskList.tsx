@@ -73,11 +73,12 @@ export function TaskList({ tasks }: { tasks: TaskRow[] }) {
     });
   }
 
-  const groups = TASK_STATUSES.map((status) => ({ status, tasks: tasks.filter((task) => task.status === status) }));
+  const openTasks = tasks.filter((task) => task.status !== "done");
+  const completedTasks = tasks.filter((task) => task.status === "done");
 
   return (
-    <div className="mx-auto max-w-[1240px] px-8 pb-20 lg:px-12">
-      <div className="rounded-[18px] border border-border-modal bg-bg-modal p-4 shadow-[0_12px_32px_rgb(23_23_19_/_0.04)]">
+    <div className="mx-auto max-w-[1080px] px-6 pb-20 lg:px-10">
+      <div className="rounded-lg border border-border-modal bg-bg-modal p-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input value={title} onChange={(event) => setTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") create(); }} placeholder="Add a task…" aria-label="New task title" disabled={creating} className="h-10 min-w-0 flex-1 bg-transparent px-2 text-[15px] text-ink outline-none placeholder:text-ink-ghost" />
           <div className="flex items-center gap-2">
@@ -89,15 +90,19 @@ export function TaskList({ tasks }: { tasks: TaskRow[] }) {
         {error && <p className="px-2 pt-2 text-[11.5px] text-red-600">{error}</p>}
       </div>
 
-      <div className="mt-10 grid gap-10 xl:grid-cols-3">
-        {groups.map(({ status, tasks: groupedTasks }) => (
-          <section key={status}>
-            <div className="mb-3 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber"/><h2 className="text-[13px] font-semibold text-ink">{STATUS_LABELS[status]}</h2><span className="font-mono text-[10.5px] text-ink-faint">{groupedTasks.length}</span></div>
-            <div className="border-t border-border">
-              {groupedTasks.length ? groupedTasks.map((task) => <TaskItem key={task.id} task={task} onError={setError} />) : <p className="border-b border-border py-5 text-[12px] text-ink-faint">Nothing here yet.</p>}
-            </div>
-          </section>
-        ))}
+      <div className="mt-9 max-w-3xl">
+        <section>
+          <div className="mb-3 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber"/><h2 className="text-[13px] font-semibold text-ink">Open</h2><span className="font-mono text-[10.5px] text-ink-faint">{openTasks.length}</span></div>
+          <div className="overflow-hidden rounded-lg border border-border bg-bg-card px-4">
+            {openTasks.length ? openTasks.map((task) => <TaskItem key={task.id} task={task} onError={setError} />) : <p className="py-5 text-[12px] text-ink-faint">Nothing needs attention right now.</p>}
+          </div>
+        </section>
+        <section className="mt-8">
+          <div className="mb-3 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-ink-ghost"/><h2 className="text-[13px] font-semibold text-ink">Completed</h2><span className="font-mono text-[10.5px] text-ink-faint">{completedTasks.length}</span></div>
+          <div className="overflow-hidden rounded-lg border border-border bg-bg-card px-4">
+            {completedTasks.length ? completedTasks.map((task) => <TaskItem key={task.id} task={task} onError={setError} />) : <p className="py-5 text-[12px] text-ink-faint">Completed tasks will collect here.</p>}
+          </div>
+        </section>
       </div>
     </div>
   );

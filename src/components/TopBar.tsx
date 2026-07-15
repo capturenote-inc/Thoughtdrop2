@@ -6,6 +6,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
 import { PAGE_COLORS, resolvePageColor } from "@/lib/page-colors";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SidebarPage {
   id: string;
@@ -42,7 +43,7 @@ function PlusIcon() {
 
 function RailLink({ href, active, expanded, label, icon, badge }: { href: string; active: boolean; expanded: boolean; label: string; icon: ReactNode; badge?: number }) {
   return (
-    <Link href={href} title={expanded ? undefined : label} className={`relative flex h-10 items-center rounded-xl px-[11px] text-[13px] transition-colors ${active ? "bg-white/10 text-white" : "text-rail-muted hover:bg-white/[0.06] hover:text-white"}`}>
+    <Link href={href} title={expanded ? undefined : label} className={`relative flex h-9 items-center rounded-lg px-[11px] text-[13px] transition-colors ${active ? "bg-rail-active text-rail-ink" : "text-rail-muted hover:bg-rail-active hover:text-rail-ink"}`}>
       {icon}
       {expanded && <span className="ml-3 truncate">{label}</span>}
       {badge && badge > 0 ? <span className={`ml-auto grid min-w-5 place-items-center rounded-full bg-amber px-1.5 py-0.5 font-mono text-[10px] text-on-amber ${expanded ? "" : "absolute -right-1 -top-1"}`}>{badge}</span> : null}
@@ -62,11 +63,11 @@ function PagesSection({ pages, pathname, expanded, open, onToggle }: { pages: Si
 
   return (
     <div>
-      <div className={`flex h-10 items-center rounded-xl ${active ? "bg-white/10 text-white" : "text-rail-muted hover:bg-white/[0.06] hover:text-white"}`}>
+      <div className={`flex h-9 items-center rounded-lg ${active ? "bg-rail-active text-rail-ink" : "text-rail-muted hover:bg-rail-active hover:text-rail-ink"}`}>
         <Link href="/pages" className="flex min-w-0 flex-1 items-center px-[11px] text-[13px]" onClick={() => { if (!open) onToggle(); }}>
           <PagesIcon /><span className="ml-3 truncate">Pages</span>
         </Link>
-        <button type="button" onClick={onToggle} aria-label={open ? "Collapse pages" : "Expand pages"} aria-expanded={open} className="mr-1 grid h-8 w-8 place-items-center rounded-lg hover:bg-white/10">
+        <button type="button" onClick={onToggle} aria-label={open ? "Collapse pages" : "Expand pages"} aria-expanded={open} className="mr-1 grid h-8 w-8 place-items-center rounded-md hover:bg-rail-active">
           <span aria-hidden className="text-base leading-none">{open ? "−" : "+"}</span>
         </button>
       </div>
@@ -78,7 +79,7 @@ function PagesSection({ pages, pathname, expanded, open, onToggle }: { pages: Si
             const palette = PAGE_COLORS[resolvePageColor(page.color)];
             const pageActive = pathname === `/pages/${page.tag}`;
             return (
-              <Link key={page.id} href={`/pages/${page.tag}`} title={page.title} className={`flex h-8 items-center rounded-lg pr-2 text-[12px] ${pageActive ? "bg-white/10 text-white" : "text-rail-muted hover:bg-white/[0.06] hover:text-white"}`} style={{ paddingLeft: `${10 + page.depth * 10}px` }}>
+              <Link key={page.id} href={`/pages/${page.tag}`} title={page.title} className={`flex h-8 items-center rounded-md pr-2 text-[12px] ${pageActive ? "bg-rail-active text-rail-ink" : "text-rail-muted hover:bg-rail-active hover:text-rail-ink"}`} style={{ paddingLeft: `${10 + page.depth * 10}px` }}>
                 <span className="mr-2 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: palette.ink }} />
                 <span className="truncate">{page.title}</span>
                 {page.pinned_at && <span className="ml-auto text-[10px] text-rail-muted" aria-label="Pinned">•</span>}
@@ -98,14 +99,14 @@ export function TopBar({ untriagedCount, pages }: { untriagedCount: number; page
   const [pagesOpen, setPagesOpen] = useState(true);
 
   return (
-    <aside className={`sticky top-0 z-20 flex h-dvh shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[width] duration-200 ${expanded ? "w-[232px]" : "w-[76px]"}`}>
+    <aside className={`sticky top-0 z-20 flex h-dvh shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[width] duration-200 ${expanded ? "w-[240px]" : "w-[68px]"}`}>
       <div className="mb-5 flex items-center justify-between">
-        <Link href="/" title="ThoughtDrop" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber text-[17px] font-bold text-on-amber">T</Link>
-        {expanded && <span className="mr-auto ml-3 text-[14px] font-semibold tracking-[-0.02em] text-white">ThoughtDrop</span>}
-        <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="grid h-8 w-8 place-items-center rounded-lg text-rail-muted hover:bg-white/[0.06] hover:text-white"><span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span></button>
+        <Link href="/" title="ThoughtDrop" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-rail-ink text-[15px] font-bold text-rail">T</Link>
+        {expanded && <span className="mr-auto ml-3 text-[14px] font-semibold tracking-[-0.02em] text-rail-ink">ThoughtDrop</span>}
+        <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="grid h-8 w-8 place-items-center rounded-md text-rail-muted hover:bg-rail-active hover:text-rail-ink"><span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span></button>
       </div>
 
-      <button type="button" onClick={openCreate} title={expanded ? undefined : "Capture a thought"} className={`mb-5 flex h-11 items-center rounded-xl bg-amber text-[13px] font-semibold text-on-amber shadow-[0_8px_20px_rgb(217_93_33_/_0.18)] transition-colors hover:bg-amber-hover ${expanded ? "px-[11px]" : "justify-center"}`}>
+      <button type="button" onClick={openCreate} title={expanded ? undefined : "Capture a thought"} className={`mb-5 flex h-10 items-center rounded-lg border border-amber bg-amber text-[13px] font-semibold text-on-amber transition-colors hover:bg-amber-hover ${expanded ? "px-[11px]" : "justify-center"}`}>
         <PlusIcon />
         {expanded && <><span className="ml-3">Capture</span><span className="ml-auto font-mono text-[10px] font-normal opacity-75">⌘K</span></>}
       </button>
@@ -117,9 +118,10 @@ export function TopBar({ untriagedCount, pages }: { untriagedCount: number; page
         <PagesSection pages={pages} pathname={pathname} expanded={expanded} open={pagesOpen} onToggle={() => setPagesOpen((value) => !value)} />
       </nav>
 
-      <div className="mt-auto border-t border-rail-line pt-3">
+      <div className="mt-auto space-y-1 border-t border-rail-line pt-3">
+        <ThemeToggle compact={!expanded} />
         <form action={logout}>
-          <button type="submit" title={expanded ? undefined : "Sign out"} className={`flex h-9 w-full items-center rounded-lg px-[11px] text-[12px] text-rail-muted hover:bg-white/[0.06] hover:text-white ${expanded ? "" : "justify-center"}`}><span aria-hidden className="text-base">↗</span>{expanded && <span className="ml-3">Sign out</span>}</button>
+          <button type="submit" title={expanded ? undefined : "Sign out"} className={`flex h-9 w-full items-center rounded-lg px-[11px] text-[12px] text-rail-muted hover:bg-rail-active hover:text-rail-ink ${expanded ? "" : "justify-center"}`}><span aria-hidden className="text-base">↗</span>{expanded && <span className="ml-3">Sign out</span>}</button>
         </form>
       </div>
     </aside>

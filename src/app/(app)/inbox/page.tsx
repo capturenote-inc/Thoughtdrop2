@@ -16,8 +16,8 @@ export default async function Inbox() {
   const count = notes?.length ?? 0;
 
   return (
-    <div className="pt-12">
-      <div className="mx-auto flex max-w-[1240px] items-end gap-4 px-8 lg:px-12">
+    <div className="pt-10">
+      <div className="mx-auto flex max-w-[1080px] items-end gap-4 px-6 lg:px-10">
         <div>
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-ink">Triage</p>
           <h1 className="m-0 text-[40px] font-semibold tracking-[-0.04em] text-ink">Inbox</h1>

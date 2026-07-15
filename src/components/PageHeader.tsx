@@ -63,7 +63,7 @@ export function PageHeader({
   }
 
   return (
-    <div className="mx-auto max-w-[1240px] px-8 pt-12 lg:px-12">
+    <div className="mx-auto max-w-[1080px] px-6 pt-10 lg:px-10">
       {parentTitle && <p className="mb-3 text-[12px] font-medium text-ink-faint">{parentTitle}</p>}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
         <h1 className="m-0 text-[40px] font-semibold tracking-[-0.045em] text-ink">{title}</h1>

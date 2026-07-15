@@ -43,10 +43,10 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
 
       <NotesDrawer notes={notes ?? []} pageTag={page.tag} pageColor={resolvePageColor(page.color)} />
 
-      <div className="mx-auto max-w-[1240px] px-8 pb-16 pt-9 lg:px-12">
-        <div className="border-t border-border pt-7">
-          <p className="text-[14px] font-medium text-ink-secondary">This space grows from captured thoughts.</p>
-          <p className="mt-1 text-[13px] text-ink-faint">Columns and blocks arrive in Phase 3. Your routed notes stay visible above.</p>
+      <div className="mx-auto max-w-[1080px] px-6 pb-16 pt-9 lg:px-10">
+        <div className="rounded-lg border border-border bg-bg-card px-5 py-5">
+          <p className="text-[14px] font-medium text-ink-secondary">This page is the durable context for its thoughts.</p>
+          <p className="mt-1 text-[13px] text-ink-faint">Capture with #{page.tag} to add a thought here, then turn the useful ones into tasks or decisions.</p>
         </div>
       </div>
     </div>

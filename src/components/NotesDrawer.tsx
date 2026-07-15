@@ -36,7 +36,7 @@ export function NotesDrawer({
   }
 
   return (
-    <section className="mx-auto mt-10 max-w-[1240px] px-8 lg:px-12">
+    <section className="mx-auto mt-10 max-w-[1080px] px-6 lg:px-10">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -49,7 +49,7 @@ export function NotesDrawer({
       </button>
 
       {open && (
-        <div className="border-t border-border pb-3">
+        <div className="space-y-3 border-t border-border pb-3 pt-3">
           {notes.length === 0 ? (
             <p className="py-6 text-[14px] text-ink-faint">Nothing has landed here yet. Capture a thought with #{pageTag} to start this page.</p>
           ) : notes.map((note) => (

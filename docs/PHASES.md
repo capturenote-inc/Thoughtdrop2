@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.4
+version: 1.5
 status: exploratory
-inputs: SPEC.md v1.7, DESIGN.md v1.0
+inputs: SPEC.md v1.8, DESIGN.md v1.0
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -94,6 +94,12 @@ progress:
     editing are implemented from the existing tasks table: status, priority,
     due date, title, and delete. Task-list blocks and Inbox task rendering
     remain separate follow-up work.
+  - Focused Ledger visual direction (2026-07-15): Bryan selected the
+    competitor-informed Focused Ledger study over Studio Desk. Implemented a
+    shared light/dark token system and persisted theme control; converted the
+    rail, capture surface, notes, Inbox, pages, and global tasks into the
+    denser ledger language. Notes now retain context and actions in contained
+    cards, while tasks use open/completed lists rather than a default board.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
@@ -145,14 +151,15 @@ progress:
 **Goal**: make the completed capture loop feel like a contemporary personal
 thinking workspace before more capability is added.
 
-1. Implement the Studio Desk app shell from
-   `docs/briefs/phase2.9-design-reset.md`: compact/expandable left rail,
+1. Implement the Focused Ledger app shell: compact/expandable left rail,
    one persistent Capture action, ordered Today → Inbox → Tasks → Pages,
    Inbox count, and an expandable Pages collection with pinned pages first.
-   Remove the disabled Search control until Phase 5 ships it.
-2. Establish the new visual tokens and type scale; then restyle the capture
-   composer, Inbox, page header, visible notes stream, and page directory.
-   Keep every Phase 2 and 2.75 behavior and server action intact.
+   Use a consistent light/dark token system and a persisted appearance
+   control. Remove the disabled Search control until Phase 5 ships it.
+2. Establish the ledger type scale and restrained component language; restyle
+   the capture composer, Inbox, page header, visible notes stream, page
+   directory, and global task view. Keep every Phase 2 and 2.75 behavior and
+   server action intact.
 3. Build Today only from real existing data: Inbox count, open tasks, recent
    notes, and pinned pages. Do not add task creation/lifecycle, blocks, AI,
    search, mobile layouts, or other new features in this phase. Phase 4

@@ -106,7 +106,7 @@ export function PageDirectory({ pages, noteCounts }: { pages: PageRow[]; noteCou
   }
 
   return (
-    <div className="mx-auto max-w-[1240px] px-8 pb-20 pt-12 lg:px-12">
+    <div className="mx-auto max-w-[1080px] px-6 pb-20 pt-10 lg:px-10">
       <div className="flex items-end justify-between gap-5">
         <div>
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-ink">Your spaces</p>
@@ -118,7 +118,7 @@ export function PageDirectory({ pages, noteCounts }: { pages: PageRow[]; noteCou
         <button
           type="button"
           onClick={() => setCreating((c) => !c)}
-          className="flex h-9 items-center rounded-xl bg-ink px-4 text-[12.5px] font-medium text-bg hover:bg-ink-body"
+          className="flex h-9 items-center rounded-lg bg-ink px-4 text-[12.5px] font-medium text-bg hover:bg-ink-body"
         >
           <span className="mr-2 text-lg font-normal leading-none">+</span> New page
         </button>
@@ -127,7 +127,7 @@ export function PageDirectory({ pages, noteCounts }: { pages: PageRow[]; noteCou
       {creating && (
         <form
           onSubmit={handleCreate}
-          className="mt-8 max-w-2xl border-y border-border-modal bg-bg-modal px-5 py-6 text-[13px] shadow-[0_12px_30px_rgb(23_23_19_/_0.04)]"
+          className="mt-8 max-w-2xl rounded-lg border border-border-modal bg-bg-modal px-5 py-6 text-[13px]"
         >
           <div className="grid gap-5 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">

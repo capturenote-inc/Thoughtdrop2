@@ -24,7 +24,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <CaptureModalProvider pages={pages ?? []}>
       <div className="flex min-h-dvh bg-bg">
         <TopBar untriagedCount={untriagedCount ?? 0} pages={pages ?? []} />
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="min-w-0 flex-1 bg-bg">{children}</main>
       </div>
     </CaptureModalProvider>
   );

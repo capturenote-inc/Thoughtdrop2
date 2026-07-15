@@ -1,62 +1,150 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #f7f5f1;
-  --color-bg-modal: #fffdf9;
-  --color-bg-card: #fffdf9;
-  --color-card-header: #f1eee8;
-  --color-bg-suggestion: #fff7ed;
-  --color-ink: #171713;
-  --color-ink-body: #39372f;
-  --color-ink-secondary: #6e6a60;
-  --color-ink-faint: #969187;
-  --color-ink-ghost: #bbb5aa;
-  --color-border: #e3dfd7;
-  --color-border-soft: #ece8e1;
-  --color-border-modal: #d8d2c8;
-  --color-amber: #d95d21;
-  --color-amber-hover: #bd4914;
-  --color-amber-ink: #9a3e13;
-  --color-amber-tint: #f9e5d9;
-  --color-amber-dashed: #d99572;
-  --color-on-amber: #fffaf5;
-  --color-rail: #1b1a17;
-  --color-rail-muted: #a9a59d;
-  --color-rail-line: #36342e;
-  --color-scrim: rgb(23 23 19 / 0.34);
+  --color-bg: var(--app-bg);
+  --color-bg-modal: var(--panel);
+  --color-bg-card: var(--panel);
+  --color-card-header: var(--panel-subtle);
+  --color-bg-suggestion: var(--accent-subtle);
+  --color-ink: var(--ink);
+  --color-ink-body: var(--ink-body);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-faint: var(--ink-faint);
+  --color-ink-ghost: var(--ink-ghost);
+  --color-border: var(--line);
+  --color-border-soft: var(--line-soft);
+  --color-border-modal: var(--line-strong);
+  --color-amber: var(--accent);
+  --color-amber-hover: var(--accent-hover);
+  --color-amber-ink: var(--accent-ink);
+  --color-amber-tint: var(--accent-subtle);
+  --color-amber-dashed: var(--accent-line);
+  --color-on-amber: var(--on-accent);
+  --color-rail: var(--rail);
+  --color-rail-muted: var(--rail-muted);
+  --color-rail-line: var(--rail-line);
+  --color-rail-ink: var(--rail-ink);
+  --color-rail-active: var(--rail-active);
+  --color-scrim: var(--scrim);
 
   --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-* {
-  border-color: var(--color-border);
+:root {
+  color-scheme: light;
+  --app-bg: #fbfbfc;
+  --panel: #ffffff;
+  --panel-subtle: #f5f5f7;
+  --ink: #202126;
+  --ink-body: #42444d;
+  --ink-secondary: #686b76;
+  --ink-faint: #90939e;
+  --ink-ghost: #b8bbc4;
+  --line: #e5e6ea;
+  --line-soft: #eeeff2;
+  --line-strong: #d9dbe1;
+  --accent: #ca6e2b;
+  --accent-hover: #ad5920;
+  --accent-ink: #924610;
+  --accent-subtle: #fff0e5;
+  --accent-line: #d79a70;
+  --on-accent: #fffaf6;
+  --rail: #f7f7f8;
+  --rail-ink: #30323a;
+  --rail-muted: #737681;
+  --rail-line: #e4e5e9;
+  --rail-active: #e9eaee;
+  --scrim: rgb(20 21 25 / 0.36);
 }
 
-html,
-body {
-  min-height: 100%;
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --app-bg: #111216;
+  --panel: #17181d;
+  --panel-subtle: #1d1f25;
+  --ink: #f2f3f5;
+  --ink-body: #d7d9df;
+  --ink-secondary: #a7aab5;
+  --ink-faint: #777b87;
+  --ink-ghost: #555963;
+  --line: #2a2d35;
+  --line-soft: #21232a;
+  --line-strong: #393c46;
+  --accent: #df8a48;
+  --accent-hover: #ec9b5c;
+  --accent-ink: #f2b17e;
+  --accent-subtle: #2d2119;
+  --accent-line: #80512f;
+  --on-accent: #20130a;
+  --rail: #15161a;
+  --rail-ink: #e6e7eb;
+  --rail-muted: #9699a4;
+  --rail-line: #292b32;
+  --rail-active: #282a31;
+  --scrim: rgb(0 0 0 / 0.66);
 }
 
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+    --app-bg: #111216;
+    --panel: #17181d;
+    --panel-subtle: #1d1f25;
+    --ink: #f2f3f5;
+    --ink-body: #d7d9df;
+    --ink-secondary: #a7aab5;
+    --ink-faint: #777b87;
+    --ink-ghost: #555963;
+    --line: #2a2d35;
+    --line-soft: #21232a;
+    --line-strong: #393c46;
+    --accent: #df8a48;
+    --accent-hover: #ec9b5c;
+    --accent-ink: #f2b17e;
+    --accent-subtle: #2d2119;
+    --accent-line: #80512f;
+    --on-accent: #20130a;
+    --rail: #15161a;
+    --rail-ink: #e6e7eb;
+    --rail-muted: #9699a4;
+    --rail-line: #292b32;
+    --rail-active: #282a31;
+    --scrim: rgb(0 0 0 / 0.66);
+  }
+}
+
+* { border-color: var(--line); }
+
+html, body { min-height: 100%; }
+
 body {
-  background: var(--color-bg);
-  color: var(--color-ink);
+  background: var(--app-bg);
+  color: var(--ink);
   font-family: var(--font-sans);
 }
 
-button,
-a,
-input,
-textarea,
-select {
-  -webkit-tap-highlight-color: transparent;
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--color-amber);
-  outline-offset: 2px;
+::selection { background: var(--accent-subtle); color: var(--ink); }
+
+.tag-pill { background: var(--tag-tint); color: var(--tag-ink); }
+html[data-theme="dark"] .tag-pill { background: var(--tag-tint-dark); color: var(--tag-ink-dark); }
+@media (prefers-color-scheme: dark) { html:not([data-theme]) .tag-pill { background: var(--tag-tint-dark); color: var(--tag-ink-dark); } }
+
+.theme-icon-light { display: none; }
+html[data-theme="dark"] .theme-icon-dark { display: none; }
+html[data-theme="dark"] .theme-icon-light { display: inline; }
+html[data-theme="dark"] .theme-label { font-size: 0; }
+html[data-theme="dark"] .theme-label::after { content: "Light mode"; font-size: 12px; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) .theme-icon-dark { display: none; }
+  html:not([data-theme]) .theme-icon-light { display: inline; }
+  html:not([data-theme]) .theme-label { font-size: 0; }
+  html:not([data-theme]) .theme-label::after { content: "Light mode"; font-size: 12px; }
 }

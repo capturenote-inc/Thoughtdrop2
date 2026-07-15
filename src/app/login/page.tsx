@@ -11,7 +11,7 @@ export default function LoginPage() {
       <div aria-hidden className="absolute -left-32 top-[-120px] h-80 w-80 rounded-full bg-amber-tint blur-3xl" />
       <form
         action={action}
-        className="relative flex w-full max-w-md flex-col gap-5 rounded-[20px] border border-border-modal bg-bg-modal p-9 shadow-[0_24px_70px_rgb(23_23_19_/_0.12)]"
+        className="relative flex w-full max-w-md flex-col gap-5 rounded-xl border border-border-modal bg-bg-modal p-9 shadow-2xl"
       >
         <div className="mb-2">
           <span className="mb-6 grid h-10 w-10 place-items-center rounded-xl bg-amber text-[17px] font-bold text-on-amber">T</span>
@@ -48,7 +48,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={pending}
-          className="mt-2 h-10 rounded-xl bg-ink px-3 text-[13px] font-semibold text-bg hover:bg-ink-body disabled:opacity-50"
+          className="mt-2 h-10 rounded-lg bg-ink px-3 text-[13px] font-semibold text-bg hover:bg-ink-body disabled:opacity-50"
         >
           {pending ? "Logging in..." : "Log in"}
         </button>

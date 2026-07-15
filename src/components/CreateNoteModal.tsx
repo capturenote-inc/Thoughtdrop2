@@ -112,7 +112,7 @@ export function CreateNoteModal({
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-scrim" onClick={onClose} />
-      <div className="absolute left-1/2 top-[9vh] w-[min(720px,calc(100vw-48px))] -translate-x-1/2 overflow-hidden rounded-[18px] border border-border-modal bg-bg-modal shadow-[0_30px_80px_rgb(23_23_19_/_0.22)]">
+      <div className="absolute left-1/2 top-[9vh] w-[min(720px,calc(100vw-48px))] -translate-x-1/2 overflow-hidden rounded-xl border border-border-modal bg-bg-modal shadow-2xl">
         <div className="border-b border-border-soft px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-ink">Quick capture</div>
         <div className="relative">
           <div aria-hidden className={`${TEXTAREA_STYLE} pointer-events-none absolute inset-0 pb-0 text-ink`}>
@@ -148,7 +148,7 @@ export function CreateNoteModal({
             type="button"
             onClick={() => void save()}
             disabled={saving}
-            className="flex h-9 items-center gap-1.5 rounded-xl bg-amber px-4 text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
+            className="flex h-9 items-center gap-1.5 rounded-lg bg-amber px-4 text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
           >
             Save
             <span className="font-mono text-[10px] font-normal opacity-75">⌘↵</span>
