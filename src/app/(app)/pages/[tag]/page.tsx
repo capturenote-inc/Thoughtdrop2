@@ -27,6 +27,7 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
       .from("notes")
       .select("id, body, created_at, pinned_at")
       .eq("page_id", page.id)
+      .is("deleted_at", null)
       .order("pinned_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false }),
   ]);

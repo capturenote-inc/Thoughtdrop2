@@ -12,7 +12,7 @@ export default async function PagesDirectory({ searchParams }: { searchParams: P
       .from("pages")
       .select("id, tag, title, parent_id, depth, color, pinned_at")
       .eq("workspace_id", workspaceId),
-    supabase.from("notes").select("page_id").eq("workspace_id", workspaceId).not("page_id", "is", null),
+    supabase.from("notes").select("page_id").eq("workspace_id", workspaceId).is("deleted_at", null).not("page_id", "is", null),
   ]);
 
   const noteCounts: Record<string, number> = {};

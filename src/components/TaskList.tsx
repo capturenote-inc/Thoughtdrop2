@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createTask, deleteTask, updateTask } from "@/lib/actions/tasks";
+import { createTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 import { TASK_PRIORITIES, TASK_STATUSES, type TaskPriority, type TaskStatus } from "@/lib/tasks";
+import { useMutationFeedback } from "@/lib/mutation-feedback-context";
+import { actionErrorMessage } from "@/lib/action-error";
 
 export interface TaskRow {
   id: string;
@@ -18,11 +20,40 @@ const PRIORITY_LABELS: Record<TaskPriority, string> = { low: "Low", medium: "Med
 function TaskItem({ task, onError }: { task: TaskRow; onError: (message: string) => void }) {
   const [pending, startTransition] = useTransition();
   const [title, setTitle] = useState(task.title);
+  const { showFeedback } = useMutationFeedback();
 
   function save(input: Parameters<typeof updateTask>[1]) {
     startTransition(async () => {
-      const result = await updateTask(task.id, input);
-      if (!result.ok) onError(result.error);
+      try {
+        const result = await updateTask(task.id, input);
+        if (!result.ok) onError(result.error);
+      } catch (error) {
+        onError(actionErrorMessage(error, "Couldn’t update this task. Try again."));
+      }
+    });
+  }
+
+  function remove() {
+    startTransition(async () => {
+      try {
+        const result = await deleteTask(task.id);
+        if (!result.ok) {
+          onError(result.error);
+          return;
+        }
+        showFeedback({
+          message: "Task moved to recently deleted.",
+          actionLabel: "Undo",
+          action: async () => {
+            const restored = await restoreTask(task.id);
+            if (!restored.ok) throw new Error(restored.error);
+          },
+          successMessage: "Task restored.",
+          errorMessage: "Couldn’t restore the task. Try again.",
+        });
+      } catch (error) {
+        onError(actionErrorMessage(error, "Couldn’t delete this task. Try again."));
+      }
     });
   }
 
@@ -50,7 +81,7 @@ function TaskItem({ task, onError }: { task: TaskRow; onError: (message: string)
           <input type="date" value={task.due_date ?? ""} onChange={(event) => save({ dueDate: event.target.value || null })} disabled={pending} aria-label="Task due date" className="bg-transparent text-[11px] text-ink-secondary outline-none" />
         </div>
       </div>
-      <button type="button" onClick={() => startTransition(async () => { const result = await deleteTask(task.id); if (!result.ok) onError(result.error); })} disabled={pending} className="mt-0.5 text-[12px] text-ink-faint opacity-0 transition group-hover:opacity-100 hover:text-red-600 focus:opacity-100 disabled:opacity-50">Delete</button>
+      <button type="button" onClick={remove} disabled={pending} className="mt-0.5 text-[12px] text-ink-faint opacity-100 transition hover:text-red-600 disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100">{pending ? "Working…" : "Delete"}</button>
     </div>
   );
 }
@@ -65,11 +96,15 @@ export function TaskList({ tasks }: { tasks: TaskRow[] }) {
   function create() {
     startCreating(async () => {
       setError(null);
-      const result = await createTask({ title, priority, dueDate: dueDate || null });
-      if (!result.ok) { setError(result.error); return; }
-      setTitle("");
-      setDueDate("");
-      setPriority("medium");
+      try {
+        const result = await createTask({ title, priority, dueDate: dueDate || null });
+        if (!result.ok) { setError(result.error); return; }
+        setTitle("");
+        setDueDate("");
+        setPriority("medium");
+      } catch (error) {
+        setError(actionErrorMessage(error, "Couldn’t create this task. Try again."));
+      }
     });
   }
 
@@ -81,7 +116,7 @@ export function TaskList({ tasks }: { tasks: TaskRow[] }) {
       <div className="rounded-lg border border-border-modal bg-bg-modal p-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input value={title} onChange={(event) => setTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") create(); }} placeholder="Add a task…" aria-label="New task title" disabled={creating} className="h-10 min-w-0 flex-1 bg-transparent px-2 text-[15px] text-ink outline-none placeholder:text-ink-ghost" />
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_auto] items-center gap-2 sm:flex">
             <select value={priority} onChange={(event) => setPriority(event.target.value as TaskPriority)} aria-label="New task priority" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
             <input type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} aria-label="New task due date" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none" />
             <button type="button" onClick={create} disabled={!title.trim() || creating} className="h-8 rounded-lg bg-ink px-3 text-[12px] font-semibold text-bg hover:bg-ink-body disabled:opacity-50">Add</button>

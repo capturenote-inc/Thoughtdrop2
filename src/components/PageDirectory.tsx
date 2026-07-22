@@ -9,6 +9,7 @@ import { DEFAULT_PAGE_COLOR, PAGE_COLORS, resolvePageColor, type PageColorKey } 
 import { TagPill } from "@/components/TagPill";
 import { ColorSwatchPicker } from "@/components/ColorSwatchPicker";
 import Link from "next/link";
+import { actionErrorMessage } from "@/lib/action-error";
 
 function ShelfRow({ node, noteCounts }: { node: PageTreeNode; noteCounts: Record<string, number> }) {
   return (
@@ -103,6 +104,8 @@ export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { p
       setColor(DEFAULT_PAGE_COLOR);
       setCreating(false);
       router.replace("/pages");
+    } catch (error) {
+      setFormError(actionErrorMessage(error, "Couldn’t create this page. Your entries are still here."));
     } finally {
       setSaving(false);
     }
@@ -194,7 +197,7 @@ export function PageDirectory({ pages, noteCounts, autoOpenCreate = false }: { p
             </select>
           </div>
           </div>
-          {formError && <p className="text-[11.5px] text-red-600">{formError}</p>}
+          {formError && <p role="alert" className="text-[11.5px] text-red-600">{formError}</p>}
           <div className="mt-6 flex justify-end gap-2">
             <button
               type="button"

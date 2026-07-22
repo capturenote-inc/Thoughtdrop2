@@ -100,6 +100,7 @@ export const createPageAndRouteNote = authenticatedAction(
       .from("notes")
       .select("workspace_id")
       .eq("id", noteId)
+      .is("deleted_at", null)
       .maybeSingle();
     if (noteError) throw noteError;
     if (!note) return { ok: false, error: "Note not found." };

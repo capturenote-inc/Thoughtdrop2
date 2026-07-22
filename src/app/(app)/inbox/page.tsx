@@ -10,6 +10,7 @@ export default async function Inbox() {
     .from("notes")
     .select("id, body, created_at, pinned_at, routing_tag, routing_unmatched")
     .eq("workspace_id", workspaceId)
+    .is("deleted_at", null)
     .is("page_id", null)
     .order("pinned_at", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });

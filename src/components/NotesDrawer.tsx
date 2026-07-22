@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { NoteCard } from "@/components/NoteCard";
-import { deleteNote, pinNote, unpinNote } from "@/lib/actions/notes";
+import { deleteNote, pinNote, restoreNote, unpinNote } from "@/lib/actions/notes";
 import { useCaptureModal } from "@/lib/capture-modal-context";
+import { useMutationFeedback } from "@/lib/mutation-feedback-context";
+import { actionErrorMessage } from "@/lib/action-error";
 import type { PageColorKey } from "@/lib/page-colors";
 
 interface DrawerNote {
@@ -28,12 +30,32 @@ export function NotesDrawer({
   const { openEdit } = useCaptureModal();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pinning, setPinning] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const { showFeedback } = useMutationFeedback();
 
   async function handleDelete(noteId: string) {
     setErrors((prev) => ({ ...prev, [noteId]: "" }));
-    const result = await deleteNote(noteId);
-    if (!result.ok) {
-      setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+    setDeleting(noteId);
+    try {
+      const result = await deleteNote(noteId);
+      if (!result.ok) {
+        setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+        return;
+      }
+      showFeedback({
+        message: "Note moved to recently deleted.",
+        actionLabel: "Undo",
+        action: async () => {
+          const restored = await restoreNote(noteId);
+          if (!restored.ok) throw new Error(restored.error);
+        },
+        successMessage: "Note restored.",
+        errorMessage: "Couldn’t restore the note. Try again.",
+      });
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, [noteId]: actionErrorMessage(error, "Couldn’t delete this note. Try again.") }));
+    } finally {
+      setDeleting(null);
     }
   }
 
@@ -41,8 +63,12 @@ export function NotesDrawer({
     setErrors((prev) => ({ ...prev, [note.id]: "" }));
     setPinning(note.id);
     try {
-      const result = note.pinned_at ? await unpinNote(note.id) : await pinNote(note.id);
-      if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      try {
+        const result = note.pinned_at ? await unpinNote(note.id) : await pinNote(note.id);
+        if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, [note.id]: actionErrorMessage(error, "Couldn’t update this pin. Try again.") }));
+      }
     } finally {
       setPinning(null);
     }
@@ -80,8 +106,8 @@ export function NotesDrawer({
                     <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} className="text-ink-secondary hover:text-ink">
                       Edit
                     </button>
-                    <button type="button" onClick={() => void handleDelete(note.id)} className="text-ink-secondary hover:text-ink">
-                      Delete
+                    <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                      {deleting === note.id ? "Deleting…" : "Delete"}
                     </button>
                   </>
                 }

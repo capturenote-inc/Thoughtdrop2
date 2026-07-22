@@ -1,7 +1,7 @@
 # SPEC.md — ThoughtDrop
 
 ```
-version: 1.12
+version: 1.13
 status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
@@ -22,6 +22,9 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   Codex companion artwork. v1.12 develops that identity into an owl actively
   holding a note and unifies Capture and rendered notes around a quiet paper
   surface with no accent-colored composer frame.
+  v1.13 makes the authenticated shell responsive, makes Capture keyboard-safe
+  and failure-resilient, and replaces immediate note/task deletion with
+  server-backed soft deletion plus Undo.
 ```
 
 ## Problem statement
@@ -39,6 +42,9 @@ future collaboration or personal workflows.
 
 Web application. A collapsible left rail orders Today, Inbox, Tasks, and
 Pages; the Pages collection expands in place and Capture is always visible.
+Below 768px, the rail becomes an initially closed overlay drawer and Capture
+remains directly available from a compact mobile header. No primary view may
+create horizontal document overflow at 320px or wider.
 The Focused Ledger visual language favors restrained borders, dense task rows,
 and a neutral theme with a deliberate accent, in both light and dark modes.
 The Pages rail exposes the real parent/child hierarchy and provides distinct
@@ -60,7 +66,13 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
   natural text spacing, and a folded-corner cue; Capture uses the same material
   language without an accent-colored border. A user may pin a note; pinned notes
   persist and sort above unpinned notes within the current Page or Inbox.
+  Deleting a note is recoverable: the row is soft-deleted, disappears from
+  active views, and can be restored from the immediate Undo action.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
+- **Deletion**: notes and tasks use a nullable `deleted_at` timestamp. Active
+  product queries exclude deleted rows. The immediate mutation result offers
+  an eight-second Undo action that clears `deleted_at`; permanent purge and a
+  trash view are separate future decisions.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.
 - **Routing**: any note containing `#tag` is automatically placed on the page owning that tag, per the rules below.
 

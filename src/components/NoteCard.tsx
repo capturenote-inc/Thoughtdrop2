@@ -56,7 +56,7 @@ export function NoteCard({
       <div className="max-w-4xl whitespace-pre-wrap py-3.5 text-[15.5px] leading-[1.75] text-ink-body">
         <NoteBody body={body} unmatched={headerTag?.unmatched} hideRoutingTagPill />
       </div>
-      <div className="flex items-center gap-3.5 border-t border-border-soft pt-2.5 text-[11.5px]">{footer}</div>
+      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2 border-t border-border-soft pt-2.5 text-[11.5px]">{footer}</div>
     </article>
   );
 }

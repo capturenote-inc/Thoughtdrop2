@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.9
+version: 1.10
 status: exploratory
-inputs: SPEC.md v1.12, DESIGN.md v1.0
+inputs: SPEC.md v1.13, DESIGN.md v1.0, BACKLOG.md v1.1
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -125,6 +125,12 @@ progress:
     component rule, restyle Capture as quiet paper, and give rendered notes a
     shared paper surface, folded-corner cue, natural line breaks, and clearer
     pinned/meta hierarchy in light and dark themes.
+  - Hardening slice (2026-07-22): implement the sub-768px overlay navigation
+    shell, mobile Capture access, Capture dialog semantics/focus restoration,
+    shared mutation feedback, and server-backed note/task soft delete with
+    Undo. Add guarded authenticated Playwright coverage for routing, undo,
+    focus, and 320–1440px overflow. Verify schema and mutations on the
+    data-free `codex-hardening-e2e` Supabase branch before production rollout.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

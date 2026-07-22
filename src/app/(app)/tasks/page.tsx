@@ -9,6 +9,7 @@ export default async function Tasks() {
     .from("tasks")
     .select("id, title, due_date, priority, status")
     .eq("workspace_id", workspaceId)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   const openCount = (tasks ?? []).filter((task) => task.status !== "done").length;

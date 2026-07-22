@@ -22,9 +22,9 @@ export default async function Today() {
 
   const [{ data: pages }, { data: recentNotes }, { data: openTasks }, { count: inboxCount }] = await Promise.all([
     supabase.from("pages").select("id, tag, title, color, pinned_at").eq("workspace_id", workspaceId).order("title"),
-    supabase.from("notes").select("id, body, created_at, page_id, pinned_at").eq("workspace_id", workspaceId).order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(5),
-    supabase.from("tasks").select("id, title, due_date, priority").eq("workspace_id", workspaceId).neq("status", "done").order("due_date", { ascending: true, nullsFirst: false }).limit(4),
-    supabase.from("notes").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).is("page_id", null),
+    supabase.from("notes").select("id, body, created_at, page_id, pinned_at").eq("workspace_id", workspaceId).is("deleted_at", null).order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(5),
+    supabase.from("tasks").select("id, title, due_date, priority").eq("workspace_id", workspaceId).is("deleted_at", null).neq("status", "done").order("due_date", { ascending: true, nullsFirst: false }).limit(4),
+    supabase.from("notes").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).is("deleted_at", null).is("page_id", null),
   ]);
 
   const pageById = new Map((pages ?? []).map((page) => [page.id, page]));

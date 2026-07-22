@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { logout } from "@/app/auth/actions";
 import { PAGE_COLORS, resolvePageColor } from "@/lib/page-colors";
@@ -49,7 +49,7 @@ function RailLink({ href, active, expanded, label, icon, badge }: { href: string
     <Link href={href} title={expanded ? undefined : label} className={`relative flex h-9 items-center rounded-lg px-[11px] text-[13px] transition-colors ${active ? "bg-rail-active text-rail-ink" : "text-rail-muted hover:bg-rail-active hover:text-rail-ink"}`}>
       {icon}
       {expanded && <span className="ml-3 truncate">{label}</span>}
-      {badge && badge > 0 ? <span className={`ml-auto grid min-w-5 place-items-center rounded-full bg-amber px-1.5 py-0.5 font-mono text-[10px] text-on-amber ${expanded ? "" : "absolute -right-1 -top-1"}`}>{badge}</span> : null}
+      {badge && badge > 0 ? <span aria-hidden className={`ml-auto grid min-w-5 place-items-center rounded-full bg-amber px-1.5 py-0.5 font-mono text-[10px] text-on-amber ${expanded ? "" : "absolute -right-1 -top-1"}`}>{badge}</span> : null}
     </Link>
   );
 }
@@ -141,23 +141,68 @@ export function TopBar({ untriagedCount, pages }: { untriagedCount: number; page
   const { openCreate } = useCaptureModal();
   const [expanded, setExpanded] = useState(true);
   const [pagesOpen, setPagesOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const openMobile = useCallback(() => {
+    setExpanded(true);
+    setMobileOpen(true);
+    requestAnimationFrame(() => closeButtonRef.current?.focus());
+  }, []);
+
+  const closeMobile = useCallback((restoreFocus = true) => {
+    setMobileOpen(false);
+    if (restoreFocus) requestAnimationFrame(() => menuButtonRef.current?.focus());
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closeMobile();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mobileOpen, closeMobile]);
 
   return (
-    <aside className={`sticky top-0 z-20 flex h-dvh shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[width] duration-200 ${expanded ? "w-[240px]" : "w-[68px]"}`}>
+    <>
+      <header className="sticky top-0 z-30 flex h-14 w-full items-center gap-2 border-b border-rail-line bg-rail px-3 md:hidden">
+        <button ref={menuButtonRef} type="button" onClick={openMobile} aria-label="Open navigation" aria-expanded={mobileOpen} className="grid h-10 w-10 place-items-center rounded-xl text-rail-ink hover:bg-rail-active">
+          <span aria-hidden className="space-y-1"><span className="block h-px w-4 bg-current"/><span className="block h-px w-4 bg-current"/><span className="block h-px w-4 bg-current"/></span>
+        </button>
+        <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="ThoughtDrop home">
+          <ThoughtdropMark className="h-8 w-8 shrink-0 text-rail-ink" />
+          <span className="truncate text-[14px] font-semibold tracking-[-0.02em] text-rail-ink">ThoughtDrop</span>
+        </Link>
+        <button type="button" onClick={openCreate} className="ml-auto flex h-9 items-center gap-2 rounded-xl bg-amber px-3 text-[12px] font-semibold text-on-amber shadow-sm">
+          <PlusIcon />Capture
+        </button>
+      </header>
+
+      {mobileOpen && <button type="button" aria-label="Dismiss navigation" onClick={() => closeMobile()} className="fixed inset-0 z-40 bg-scrim md:hidden" />}
+
+      <aside aria-label="Application navigation" className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(86vw,300px)] shrink-0 flex-col border-r border-rail-line bg-rail p-3 transition-[transform,width] duration-200 md:sticky md:top-0 md:z-20 md:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} ${expanded ? "md:w-[240px]" : "md:w-[68px]"}`}>
       <div className="mb-5 flex items-center justify-between">
-        <Link href="/" title="ThoughtDrop home" aria-label="ThoughtDrop home" className="grid h-10 w-10 shrink-0 place-items-center rounded-[13px] border border-rail-line bg-rail-active text-rail-ink shadow-sm transition-transform hover:scale-[1.03]">
+        <Link href="/" onClick={() => closeMobile(false)} title="ThoughtDrop home" aria-label="ThoughtDrop home" className="grid h-10 w-10 shrink-0 place-items-center rounded-[13px] border border-rail-line bg-rail-active text-rail-ink shadow-sm transition-transform hover:scale-[1.03]">
           <ThoughtdropMark className="h-[34px] w-[34px]" />
         </Link>
         {expanded && <span className="mr-auto ml-3 text-[14px] font-semibold tracking-[-0.02em] text-rail-ink">ThoughtDrop</span>}
-        <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="grid h-8 w-8 place-items-center rounded-md text-rail-muted hover:bg-rail-active hover:text-rail-ink"><span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span></button>
+        <button type="button" onClick={() => setExpanded((value) => !value)} aria-label={expanded ? "Collapse navigation" : "Expand navigation"} title={expanded ? "Collapse navigation" : "Expand navigation"} className="hidden h-8 w-8 place-items-center rounded-md text-rail-muted hover:bg-rail-active hover:text-rail-ink md:grid"><span aria-hidden className="text-base leading-none">{expanded ? "‹" : "›"}</span></button>
+        <button ref={closeButtonRef} type="button" onClick={() => closeMobile()} aria-label="Close navigation" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-rail-muted hover:bg-rail-active hover:text-rail-ink md:hidden"><span aria-hidden>×</span></button>
       </div>
 
-      <button type="button" onClick={openCreate} title={expanded ? undefined : "Capture a thought"} className={`mb-5 flex h-10 items-center rounded-lg border border-amber bg-amber text-[13px] font-semibold text-on-amber transition-colors hover:bg-amber-hover ${expanded ? "px-[11px]" : "justify-center"}`}>
+      <button type="button" onClick={() => { closeMobile(false); openCreate(); }} aria-label="Capture" title={expanded ? undefined : "Capture a thought"} className={`mb-5 flex h-10 items-center rounded-lg border border-amber bg-amber text-[13px] font-semibold text-on-amber transition-colors hover:bg-amber-hover ${expanded ? "px-[11px]" : "justify-center"}`}>
         <PlusIcon />
         {expanded && <><span className="ml-3">Capture</span><span className="ml-auto font-mono text-[10px] font-normal opacity-75">⌘K</span></>}
       </button>
 
-      <nav className="space-y-1" aria-label="Primary navigation">
+      <nav className="space-y-1" aria-label="Primary navigation" onClick={(event) => { if ((event.target as HTMLElement).closest("a")) closeMobile(false); }}>
         <RailLink href="/" active={pathname === "/"} expanded={expanded} label="Today" icon={<TodayIcon />} />
         <RailLink href="/inbox" active={pathname.startsWith("/inbox")} expanded={expanded} label="Inbox" icon={<InboxIcon />} badge={untriagedCount} />
         <RailLink href="/tasks" active={pathname.startsWith("/tasks")} expanded={expanded} label="Tasks" icon={<TaskIcon />} />
@@ -170,6 +215,7 @@ export function TopBar({ untriagedCount, pages }: { untriagedCount: number; page
           <button type="submit" title={expanded ? undefined : "Sign out"} className={`flex h-9 w-full items-center rounded-lg px-[11px] text-[12px] text-rail-muted hover:bg-rail-active hover:text-rail-ink ${expanded ? "" : "justify-center"}`}><span aria-hidden className="text-base">↗</span>{expanded && <span className="ml-3">Sign out</span>}</button>
         </form>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

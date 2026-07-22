@@ -5,6 +5,7 @@ import { getLeftmostTag } from "@/lib/routing";
 import { segmentNoteBody } from "@/lib/note-body";
 import { createNote, updateNote } from "@/lib/actions/notes";
 import { TagPill } from "@/components/TagPill";
+import { useMutationFeedback } from "@/lib/mutation-feedback-context";
 
 interface PageOption {
   id: string;
@@ -52,6 +53,8 @@ export function CreateNoteModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const { showFeedback } = useMutationFeedback();
 
   useEffect(() => {
     const el = textareaRef.current;
@@ -76,16 +79,36 @@ export function CreateNoteModal({
   }, [draft]);
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
+        e.preventDefault();
         onClose();
+      } else if (e.key === "Tab") {
+        const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), a[href]'
+        ) ?? []);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       } else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         e.preventDefault();
         void save();
       }
     }
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft]);
 
@@ -99,7 +122,10 @@ export function CreateNoteModal({
         setError(result.error);
         return;
       }
+      showFeedback({ message: editingNoteId ? "Note updated." : matchedPage ? `Note filed in ${matchedPage.title}.` : "Note saved to Inbox.", tone: "success" });
       onClose();
+    } catch {
+      setError("Couldn’t save this note. Your draft is still here. Try again.");
     } finally {
       setSaving(false);
     }
@@ -109,12 +135,12 @@ export function CreateNoteModal({
   const matchedPage = leftmostTag ? pages.find((p) => p.tag === leftmostTag) : undefined;
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-scrim" onClick={onClose} />
-      <div className="absolute left-1/2 top-[12vh] w-[min(720px,calc(100vw-40px))] -translate-x-1/2 overflow-hidden rounded-[20px] border border-border-modal bg-bg-modal shadow-2xl">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="capture-dialog-title" className="absolute left-1/2 top-3 max-h-[calc(100dvh-24px)] w-[calc(100vw-24px)] -translate-x-1/2 overflow-y-auto rounded-[20px] border border-border-modal bg-bg-modal shadow-2xl sm:top-[12vh] sm:w-[min(720px,calc(100vw-40px))]">
         <div className="flex items-center justify-between px-6 pb-3 pt-5">
-          <span className="text-[14px] font-semibold tracking-[-0.015em] text-ink">{editingNoteId ? "Edit note" : "New note"}</span>
-          <span className="font-mono text-[10px] text-ink-faint">esc to close</span>
+          <h2 id="capture-dialog-title" className="text-[14px] font-semibold tracking-[-0.015em] text-ink">{editingNoteId ? "Edit note" : "New note"}</h2>
+          <button type="button" onClick={onClose} aria-label="Close note editor" className="flex h-8 items-center gap-2 rounded-lg px-2 text-[11px] text-ink-faint hover:bg-card-header hover:text-ink"><span className="hidden font-mono sm:inline">esc</span><span aria-hidden className="text-lg leading-none">×</span></button>
         </div>
         <div className="capture-paper relative mx-5 overflow-hidden rounded-[14px]">
           <div aria-hidden className={`${TEXTAREA_STYLE} pointer-events-none absolute inset-0 pb-0 text-ink`}>
@@ -125,12 +151,13 @@ export function CreateNoteModal({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Write it down. A #tag gives it a home."
+            aria-label="Note text"
             className={`${TEXTAREA_STYLE} capture-editor relative bg-transparent text-transparent caret-amber placeholder:text-ink-ghost`}
             style={{ outline: "none" }}
           />
         </div>
-        {error && <p className="px-6 pt-2 text-[11.5px] text-red-600">{error}</p>}
-        <div className="mx-5 mb-4 mt-3 flex min-h-10 items-center gap-1.5 text-[12px]">
+        {error && <p role="alert" aria-live="assertive" className="px-6 pt-2 text-[11.5px] text-red-600">{error}</p>}
+        <div className="mx-5 mb-4 mt-3 flex min-h-10 flex-wrap items-center gap-2 text-[12px]">
           {!leftmostTag && <span className="text-ink-faint">No tag? It lands in your Inbox.</span>}
           {leftmostTag && matchedPage && (
             <span className="flex items-center gap-1.5 text-ink-secondary">
@@ -145,14 +172,14 @@ export function CreateNoteModal({
               doesn&apos;t match a page yet — lands in Inbox
             </span>
           )}
-          <div className="flex-1" />
+          <div className="min-w-2 flex-1" />
           <button
             type="button"
             onClick={() => void save()}
             disabled={saving || !draft.trim()}
             className="flex h-9 items-center gap-1.5 rounded-[10px] bg-amber px-4 text-[12.5px] font-semibold text-on-amber shadow-sm hover:bg-amber-hover disabled:opacity-60"
           >
-            Save
+            {saving ? "Saving…" : "Save"}
             <span className="font-mono text-[10px] font-normal opacity-75">⌘↵</span>
           </button>
         </div>

@@ -70,7 +70,7 @@ export const updateTask = authenticatedAction(async ({ supabase }, taskId: strin
   }
   if (Object.keys(update).length === 0) return { ok: true };
 
-  const { data, error } = await supabase.from("tasks").update(update).eq("id", taskId).select("id").maybeSingle();
+  const { data, error } = await supabase.from("tasks").update(update).eq("id", taskId).is("deleted_at", null).select("id").maybeSingle();
   if (error) throw error;
   if (!data) return { ok: false, error: "Task not found." };
 
@@ -79,9 +79,30 @@ export const updateTask = authenticatedAction(async ({ supabase }, taskId: strin
 });
 
 export const deleteTask = authenticatedAction(async ({ supabase }, taskId: string): Promise<TaskActionResult> => {
-  const { data, error } = await supabase.from("tasks").delete().eq("id", taskId).select("id").maybeSingle();
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", taskId)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
   if (error) throw error;
   if (!data) return { ok: false, error: "Task not found." };
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+});
+
+export const restoreTask = authenticatedAction(async ({ supabase }, taskId: string): Promise<TaskActionResult> => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({ deleted_at: null })
+    .eq("id", taskId)
+    .not("deleted_at", "is", null)
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return { ok: false, error: "Task could not be restored." };
 
   revalidatePath("/", "layout");
   return { ok: true };

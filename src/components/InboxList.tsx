@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { NoteCard } from "@/components/NoteCard";
-import { deleteNote, pinNote, unpinNote } from "@/lib/actions/notes";
+import { deleteNote, pinNote, restoreNote, unpinNote } from "@/lib/actions/notes";
 import { createPageAndRouteNote } from "@/lib/actions/pages";
 import { useCaptureModal } from "@/lib/capture-modal-context";
 import { parseTags } from "@/lib/routing";
+import { useMutationFeedback } from "@/lib/mutation-feedback-context";
+import { actionErrorMessage } from "@/lib/action-error";
 
 interface InboxNote {
   id: string;
@@ -21,6 +23,8 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [creatingFor, setCreatingFor] = useState<string | null>(null);
   const [pinning, setPinning] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const { showFeedback } = useMutationFeedback();
 
   function fixTag(note: InboxNote) {
     const first = parseTags(note.body)[0];
@@ -35,9 +39,11 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
     setErrors((prev) => ({ ...prev, [note.id]: "" }));
     setCreatingFor(note.id);
     try {
-      const result = await createPageAndRouteNote(note.id, note.routing_tag as string);
-      if (!result.ok) {
-        setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      try {
+        const result = await createPageAndRouteNote(note.id, note.routing_tag as string);
+        if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, [note.id]: actionErrorMessage(error, "Couldn’t create that page. Try again.") }));
       }
     } finally {
       setCreatingFor(null);
@@ -46,9 +52,27 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
 
   async function handleDelete(noteId: string) {
     setErrors((prev) => ({ ...prev, [noteId]: "" }));
-    const result = await deleteNote(noteId);
-    if (!result.ok) {
-      setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+    setDeleting(noteId);
+    try {
+      const result = await deleteNote(noteId);
+      if (!result.ok) {
+        setErrors((prev) => ({ ...prev, [noteId]: result.error }));
+        return;
+      }
+      showFeedback({
+        message: "Note moved to recently deleted.",
+        actionLabel: "Undo",
+        action: async () => {
+          const restored = await restoreNote(noteId);
+          if (!restored.ok) throw new Error(restored.error);
+        },
+        successMessage: "Note restored.",
+        errorMessage: "Couldn’t restore the note. Try again.",
+      });
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, [noteId]: actionErrorMessage(error, "Couldn’t delete this note. Try again.") }));
+    } finally {
+      setDeleting(null);
     }
   }
 
@@ -56,8 +80,12 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
     setErrors((prev) => ({ ...prev, [note.id]: "" }));
     setPinning(note.id);
     try {
-      const result = note.pinned_at ? await unpinNote(note.id) : await pinNote(note.id);
-      if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      try {
+        const result = note.pinned_at ? await unpinNote(note.id) : await pinNote(note.id);
+        if (!result.ok) setErrors((prev) => ({ ...prev, [note.id]: result.error }));
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, [note.id]: actionErrorMessage(error, "Couldn’t update this pin. Try again.") }));
+      }
     } finally {
       setPinning(null);
     }
@@ -104,8 +132,8 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                         <button type="button" onClick={() => void handleTogglePin(note)} disabled={pinning === note.id} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
                           {note.pinned_at ? "Unpin" : "Pin"}
                         </button>
-                        <button type="button" onClick={() => void handleDelete(note.id)} className="text-ink-secondary hover:text-ink">
-                          Delete
+                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                          {deleting === note.id ? "Deleting…" : "Delete"}
                         </button>
                       </>
                     ) : (
@@ -117,8 +145,8 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                         <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} className="text-ink-secondary hover:text-ink">
                           Edit
                         </button>
-                        <button type="button" onClick={() => void handleDelete(note.id)} className="text-ink-secondary hover:text-ink">
-                          Delete
+                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                          {deleting === note.id ? "Deleting…" : "Delete"}
                         </button>
                       </>
                     )

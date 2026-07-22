@@ -5,6 +5,7 @@ import { TagPill } from "@/components/TagPill";
 import { ColorSwatchPicker } from "@/components/ColorSwatchPicker";
 import { pinPage, unpinPage, setPageColor } from "@/lib/actions/pages";
 import { resolvePageColor, type PageColorKey } from "@/lib/page-colors";
+import { actionErrorMessage } from "@/lib/action-error";
 
 function PinIcon() {
   return <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="h-4 w-4"><path d="m15 4 5 5-3 1-3 4-3-3 4-3zM12 12l-7 7"/></svg>;
@@ -40,10 +41,14 @@ export function PageHeader({
     const next = !isPinned;
     setIsPinned(next);
     startTransition(async () => {
-      const result = next ? await pinPage(pageId) : await unpinPage(pageId);
-      if (!result.ok) {
+      try {
+        const result = next ? await pinPage(pageId) : await unpinPage(pageId);
+        if (result.ok) return;
         setIsPinned(!next);
         setError(result.error);
+      } catch (error) {
+        setIsPinned(!next);
+        setError(actionErrorMessage(error, "Couldn’t update this page pin. Try again."));
       }
     });
   }
@@ -54,10 +59,14 @@ export function PageHeader({
     setPickingColor(false);
     setError(null);
     startTransition(async () => {
-      const result = await setPageColor(pageId, nextColor);
-      if (!result.ok) {
+      try {
+        const result = await setPageColor(pageId, nextColor);
+        if (result.ok) return;
         setCurrentColor(previous);
         setError(result.error);
+      } catch (error) {
+        setCurrentColor(previous);
+        setError(actionErrorMessage(error, "Couldn’t change this page color. Try again."));
       }
     });
   }
@@ -86,7 +95,7 @@ export function PageHeader({
           </div>
         </div>
       </div>
-      {error && <p className="mt-2 text-[11.5px] text-red-600">{error}</p>}
+      {error && <p role="alert" className="mt-2 text-[11.5px] text-red-600">{error}</p>}
     </div>
   );
 }

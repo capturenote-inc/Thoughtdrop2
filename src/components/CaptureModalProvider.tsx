@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CaptureModalContext, type CaptureModalNote } from "@/lib/capture-modal-context";
 import { CreateNoteModal } from "@/components/CreateNoteModal";
 
@@ -24,14 +24,27 @@ export function CaptureModalProvider({
   children: React.ReactNode;
 }) {
   const [state, setState] = useState<ModalState>({ mode: "closed" });
+  const openerRef = useRef<HTMLElement | null>(null);
 
-  const openCreate = useCallback(() => setState({ mode: "create" }), []);
+  const rememberOpener = useCallback(() => {
+    openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }, []);
+
+  const openCreate = useCallback(() => {
+    rememberOpener();
+    setState({ mode: "create" });
+  }, [rememberOpener]);
   const openEdit = useCallback(
-    (note: CaptureModalNote, focusTagIndex?: number, focusTagLength?: number) =>
-      setState({ mode: "edit", note, focusTagIndex, focusTagLength }),
-    []
+    (note: CaptureModalNote, focusTagIndex?: number, focusTagLength?: number) => {
+      rememberOpener();
+      setState({ mode: "edit", note, focusTagIndex, focusTagLength });
+    },
+    [rememberOpener]
   );
-  const close = useCallback(() => setState({ mode: "closed" }), []);
+  const close = useCallback(() => {
+    setState({ mode: "closed" });
+    requestAnimationFrame(() => openerRef.current?.focus());
+  }, []);
 
   useEffect(() => {
     // ⌘K, not ⌘N: Chrome reserves ⌘N at the window level for "New Window"
@@ -47,12 +60,12 @@ export function CaptureModalProvider({
       const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && !isTyping) {
         e.preventDefault();
-        setState({ mode: "create" });
+        openCreate();
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [openCreate]);
 
   return (
     <CaptureModalContext.Provider value={{ openCreate, openEdit }}>

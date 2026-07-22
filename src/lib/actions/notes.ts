@@ -39,6 +39,7 @@ export const updateNote = authenticatedAction(
       .from("notes")
       .update({ body: trimmed })
       .eq("id", noteId)
+      .is("deleted_at", null)
       .select("id, workspace_id, body, page_id, routing_tag, routing_unmatched")
       .maybeSingle();
 
@@ -52,8 +53,29 @@ export const updateNote = authenticatedAction(
 );
 
 export const deleteNote = authenticatedAction(async ({ supabase }, noteId: string): Promise<NoteActionResult> => {
-  const { error } = await supabase.from("notes").delete().eq("id", noteId);
+  const { data, error } = await supabase
+    .from("notes")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", noteId)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
   if (error) throw error;
+  if (!data) return { ok: false, error: "Note not found." };
+  revalidatePath("/", "layout");
+  return { ok: true };
+});
+
+export const restoreNote = authenticatedAction(async ({ supabase }, noteId: string): Promise<NoteActionResult> => {
+  const { data, error } = await supabase
+    .from("notes")
+    .update({ deleted_at: null })
+    .eq("id", noteId)
+    .not("deleted_at", "is", null)
+    .select("id")
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return { ok: false, error: "Note could not be restored." };
   revalidatePath("/", "layout");
   return { ok: true };
 });
@@ -63,6 +85,7 @@ export const pinNote = authenticatedAction(async ({ supabase }, noteId: string):
     .from("notes")
     .update({ pinned_at: new Date().toISOString() })
     .eq("id", noteId)
+    .is("deleted_at", null)
     .select("id")
     .maybeSingle();
   if (error) throw error;
@@ -77,6 +100,7 @@ export const unpinNote = authenticatedAction(async ({ supabase }, noteId: string
     .from("notes")
     .update({ pinned_at: null })
     .eq("id", noteId)
+    .is("deleted_at", null)
     .select("id")
     .maybeSingle();
   if (error) throw error;
