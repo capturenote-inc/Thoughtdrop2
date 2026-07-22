@@ -103,6 +103,7 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
           {notes.map((note) => {
             const unmatched = note.routing_unmatched && Boolean(note.routing_tag);
             const error = errors[note.id];
+            const busy = creatingFor === note.id || pinning === note.id || deleting === note.id;
             return (
                 <div key={note.id} className="flex flex-col gap-1">
                 <NoteCard
@@ -116,36 +117,37 @@ export function InboxList({ notes }: { notes: InboxNote[] }) {
                         <button
                           type="button"
                           onClick={() => void handleCreateTag(note)}
-                          disabled={creatingFor === note.id}
+                          disabled={busy}
                           className="flex h-[26px] items-center rounded-md border border-amber px-[11px] font-medium text-amber-ink hover:border-ink-ghost disabled:opacity-60"
                         >
-                          Create #{note.routing_tag}
+                          {creatingFor === note.id ? "Creating…" : `Create #${note.routing_tag}`}
                         </button>
                         <button
                           type="button"
                           onClick={() => fixTag(note)}
-                          className="flex h-[26px] items-center rounded-md border border-border px-[11px] text-ink-secondary hover:border-ink-ghost hover:text-ink"
+                          disabled={busy}
+                          className="flex h-[26px] items-center rounded-md border border-border px-[11px] text-ink-secondary hover:border-ink-ghost hover:text-ink disabled:opacity-60"
                         >
                           Fix tag
                         </button>
                         <div className="flex-1" />
-                        <button type="button" onClick={() => void handleTogglePin(note)} disabled={pinning === note.id} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
-                          {note.pinned_at ? "Unpin" : "Pin"}
+                        <button type="button" onClick={() => void handleTogglePin(note)} disabled={busy} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
+                          {pinning === note.id ? "Working…" : note.pinned_at ? "Unpin" : "Pin"}
                         </button>
-                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={busy} className="text-ink-secondary hover:text-ink disabled:opacity-60">
                           {deleting === note.id ? "Deleting…" : "Delete"}
                         </button>
                       </>
                     ) : (
                       <>
                         <div className="flex-1" />
-                        <button type="button" onClick={() => void handleTogglePin(note)} disabled={pinning === note.id} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
-                          {note.pinned_at ? "Unpin" : "Pin"}
+                        <button type="button" onClick={() => void handleTogglePin(note)} disabled={busy} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
+                          {pinning === note.id ? "Working…" : note.pinned_at ? "Unpin" : "Pin"}
                         </button>
-                        <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} className="text-ink-secondary hover:text-ink">
+                        <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} disabled={busy} className="text-ink-secondary hover:text-ink disabled:opacity-60">
                           Edit
                         </button>
-                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                        <button type="button" onClick={() => void handleDelete(note.id)} disabled={busy} className="text-ink-secondary hover:text-ink disabled:opacity-60">
                           {deleting === note.id ? "Deleting…" : "Delete"}
                         </button>
                       </>

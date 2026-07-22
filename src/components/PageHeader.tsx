@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { TagPill } from "@/components/TagPill";
 import { ColorSwatchPicker } from "@/components/ColorSwatchPicker";
-import { pinPage, unpinPage, setPageColor } from "@/lib/actions/pages";
+import { archivePage, pinPage, restorePage, unpinPage, setPageColor } from "@/lib/actions/pages";
 import { resolvePageColor, type PageColorKey } from "@/lib/page-colors";
 import { actionErrorMessage } from "@/lib/action-error";
+import { useMutationFeedback } from "@/lib/mutation-feedback-context";
 
 function PinIcon() {
   return <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="h-4 w-4"><path d="m15 4 5 5-3 1-3 4-3-3 4-3zM12 12l-7 7"/></svg>;
@@ -13,6 +15,10 @@ function PinIcon() {
 
 function PaletteIcon() {
   return <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M12 3a9 9 0 1 0 0 18h1.2c1 0 1.6-1.1 1.1-2-.4-.8.2-1.8 1.1-1.8h1.3A4.3 4.3 0 0 0 21 13 10 10 0 0 0 12 3Z"/><path d="M7.5 12h.01M9 7.5h.01M14.5 7.5h.01M17 12h.01" strokeWidth="2.5" strokeLinecap="round"/></svg>;
+}
+
+function ArchiveIcon() {
+  return <svg aria-hidden viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><path d="M4 7h16v13H4zM3 3h18v4H3zM9 11h6"/></svg>;
 }
 
 export function PageHeader({
@@ -30,11 +36,27 @@ export function PageHeader({
   pinned: boolean;
   parentTitle: string | null;
 }) {
+  const router = useRouter();
+  const { showFeedback } = useMutationFeedback();
   const [currentColor, setCurrentColor] = useState<PageColorKey>(resolvePageColor(color));
   const [isPinned, setIsPinned] = useState(pinned);
   const [pickingColor, setPickingColor] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const colorButtonRef = useRef<HTMLButtonElement>(null);
+  const colorPopoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!pickingColor) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setPickingColor(false);
+      requestAnimationFrame(() => colorButtonRef.current?.focus());
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [pickingColor]);
 
   function togglePin() {
     setError(null);
@@ -71,6 +93,32 @@ export function PageHeader({
     });
   }
 
+  function handleArchive() {
+    setError(null);
+    startTransition(async () => {
+      try {
+        const result = await archivePage(pageId);
+        if (!result.ok) {
+          setError(result.error);
+          return;
+        }
+        showFeedback({
+          message: result.affected > 1 ? `${title} and ${result.affected - 1} nested pages archived.` : `${title} archived.`,
+          actionLabel: "Undo",
+          action: async () => {
+            const restored = await restorePage(pageId);
+            if (!restored.ok) throw new Error(restored.error);
+          },
+          successMessage: `${title} restored.`,
+          errorMessage: "Couldn’t restore this page. Open Pages to try again.",
+        });
+        router.push("/pages");
+      } catch (error) {
+        setError(actionErrorMessage(error, "Couldn’t archive this page. Try again."));
+      }
+    });
+  }
+
   return (
     <div className="mx-auto max-w-[1080px] px-6 pt-10 lg:px-10">
       {parentTitle && <p className="mb-3 text-[12px] font-medium text-ink-faint">{parentTitle}</p>}
@@ -80,19 +128,23 @@ export function PageHeader({
         <div className="ml-auto flex items-center gap-2 text-[12px] text-ink-secondary">
           <button type="button" onClick={togglePin} disabled={pending} title={isPinned ? "Unpin page" : "Pin page"} className="flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 hover:border-ink-ghost hover:text-ink disabled:opacity-60">
             <PinIcon />
-            <span>{isPinned ? "Unpin" : "Pin"}</span>
+            <span>{pending ? "Working…" : isPinned ? "Unpin" : "Pin"}</span>
           </button>
           <div className="relative">
-            <button type="button" onClick={() => setPickingColor((p) => !p)} title="Change page color" className="flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 hover:border-ink-ghost hover:text-ink">
+            <button ref={colorButtonRef} type="button" onClick={() => setPickingColor((p) => !p)} disabled={pending} title="Change page color" aria-expanded={pickingColor} aria-controls="page-color-popover" className="flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 hover:border-ink-ghost hover:text-ink disabled:opacity-60">
               <PaletteIcon />
-              <span>Color</span>
+              <span>{pending ? "Working…" : "Color"}</span>
             </button>
             {pickingColor && (
-              <div className="absolute right-0 top-10 z-10 rounded-xl border border-border-modal bg-bg-modal p-3 shadow-[0_12px_28px_rgb(23_23_19_/_0.12)]">
+              <div ref={colorPopoverRef} id="page-color-popover" role="group" aria-label="Page color" className="absolute right-0 top-10 z-10 rounded-xl border border-border-modal bg-bg-modal p-3 shadow-[0_12px_28px_rgb(23_23_19_/_0.12)]">
                 <ColorSwatchPicker value={currentColor} onChange={handleColorChange} />
               </div>
             )}
           </div>
+          <button type="button" onClick={handleArchive} disabled={pending} title="Archive page" className="flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 hover:border-ink-ghost hover:text-ink disabled:opacity-60">
+            <ArchiveIcon />
+            <span>{pending ? "Working…" : "Archive"}</span>
+          </button>
         </div>
       </div>
       {error && <p role="alert" className="mt-2 text-[11.5px] text-red-600">{error}</p>}

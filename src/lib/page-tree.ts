@@ -15,6 +15,7 @@ export interface PageRow {
   depth: number;
   color: string;
   pinned_at?: string | null;
+  archived_at?: string | null;
 }
 
 export function buildPageTree(pages: PageRow[]): PageTreeNode[] {

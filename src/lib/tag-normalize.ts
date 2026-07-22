@@ -18,6 +18,19 @@ export function isValidTag(tag: string): boolean {
   return TAG_FORMAT.test(tag);
 }
 
+/** Suggest an editable page tag from a title while staying inside page_tag. */
+export function suggestTagFromTitle(title: string): string {
+  const plain = title
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (!plain) return "";
+  const startsWithLetter = /^[a-z]/.test(plain) ? plain : `page-${plain}`;
+  return startsWithLetter.slice(0, 64).replace(/-+$/g, "");
+}
+
 export const TAG_FORMAT_HELP = "Letters, digits, - and _, starting with a letter. The # is added for you.";
 
 export const TAG_FORMAT_ERROR =

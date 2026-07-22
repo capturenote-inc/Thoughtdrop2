@@ -12,6 +12,7 @@ const PIN_LIMIT_ERROR = "Unpin a page first — 5 max";
 export interface CreatePageFieldErrors {
   title?: string;
   tag?: string;
+  parent?: string;
 }
 
 export type CreatePageResult = { ok: true } | { ok: false; fieldErrors: CreatePageFieldErrors };
@@ -46,6 +47,18 @@ export const createPage = authenticatedAction(
 
     const workspaceId = await getCurrentWorkspaceId(supabase);
 
+    if (input.parentId) {
+      const { data: parent, error: parentError } = await supabase
+        .from("pages")
+        .select("id")
+        .eq("id", input.parentId)
+        .eq("workspace_id", workspaceId)
+        .is("archived_at", null)
+        .maybeSingle();
+      if (parentError) throw parentError;
+      if (!parent) return { ok: false, fieldErrors: { parent: "Choose an active parent page." } };
+    }
+
     const { error } = await supabase.from("pages").insert({
       workspace_id: workspaceId,
       tag,
@@ -56,7 +69,16 @@ export const createPage = authenticatedAction(
 
     if (error) {
       const kind = classifyPgError(error.code);
-      if (kind === "unique_violation") return { ok: false, fieldErrors: { tag: TAG_DUPLICATE_ERROR } };
+      if (kind === "unique_violation") {
+        const { data: existing, error: lookupError } = await supabase
+          .from("pages")
+          .select("archived_at")
+          .eq("workspace_id", workspaceId)
+          .eq("tag", tag)
+          .maybeSingle();
+        if (lookupError) throw lookupError;
+        return { ok: false, fieldErrors: { tag: existing?.archived_at ? "That tag belongs to an archived page. Restore it below." : TAG_DUPLICATE_ERROR } };
+      }
       if (kind === "check_violation") return { ok: false, fieldErrors: { tag: TAG_FORMAT_ERROR } };
       throw error;
     }
@@ -118,7 +140,7 @@ export const createPageAndRouteNote = authenticatedAction(
       if (kind === "unique_violation") {
         const { data: existingPage, error: lookupError } = await supabase
           .from("pages")
-          .select("id")
+          .select("id, archived_at")
           .eq("workspace_id", note.workspace_id)
           .eq("tag", normalizedTag)
           .maybeSingle();
@@ -128,6 +150,9 @@ export const createPageAndRouteNote = authenticatedAction(
         // wrong (e.g. RLS hiding a row that shouldn't exist) -- surface the
         // original constraint error rather than paper over it.
         if (!existingPage) throw pageError;
+        if (existingPage.archived_at) {
+          return { ok: false, error: "That tag belongs to an archived page. Restore it from Pages." };
+        }
         pageId = existingPage.id;
       } else if (kind === "check_violation") {
         return { ok: false, error: TAG_FORMAT_ERROR };
@@ -167,7 +192,7 @@ export const setPageColor = authenticatedAction(
   async ({ supabase }, pageId: string, color: string): Promise<PageActionResult> => {
     if (!isPageColorKey(color)) return { ok: false, error: "Not a valid color." };
 
-    const { error } = await supabase.from("pages").update({ color }).eq("id", pageId);
+    const { error } = await supabase.from("pages").update({ color }).eq("id", pageId).is("archived_at", null);
     if (error) throw error;
 
     revalidatePath("/", "layout");
@@ -187,6 +212,7 @@ export const pinPage = authenticatedAction(async ({ supabase }, pageId: string):
     .from("pages")
     .select("workspace_id, pinned_at")
     .eq("id", pageId)
+    .is("archived_at", null)
     .maybeSingle();
   if (pageError) throw pageError;
   if (!page) return { ok: false, error: "Page not found." };
@@ -196,11 +222,12 @@ export const pinPage = authenticatedAction(async ({ supabase }, pageId: string):
     .from("pages")
     .select("id", { count: "exact", head: true })
     .eq("workspace_id", page.workspace_id)
+    .is("archived_at", null)
     .not("pinned_at", "is", null);
   if (countError) throw countError;
   if ((count ?? 0) >= 5) return { ok: false, error: PIN_LIMIT_ERROR };
 
-  const { error } = await supabase.from("pages").update({ pinned_at: new Date().toISOString() }).eq("id", pageId);
+  const { error } = await supabase.from("pages").update({ pinned_at: new Date().toISOString() }).eq("id", pageId).is("archived_at", null);
   if (error) {
     if (classifyPgError(error.code) === "pin_limit") return { ok: false, error: PIN_LIMIT_ERROR };
     throw error;
@@ -211,9 +238,86 @@ export const pinPage = authenticatedAction(async ({ supabase }, pageId: string):
 });
 
 export const unpinPage = authenticatedAction(async ({ supabase }, pageId: string): Promise<PageActionResult> => {
-  const { error } = await supabase.from("pages").update({ pinned_at: null }).eq("id", pageId);
+  const { error } = await supabase.from("pages").update({ pinned_at: null }).eq("id", pageId).is("archived_at", null);
   if (error) throw error;
 
   revalidatePath("/", "layout");
   return { ok: true };
+});
+
+interface ArchivablePageRow {
+  id: string;
+  parent_id: string | null;
+  archived_at: string | null;
+}
+
+function collectDescendantIds(
+  pages: ArchivablePageRow[],
+  rootId: string,
+  include: (page: ArchivablePageRow) => boolean
+): string[] {
+  const ids: string[] = [];
+  const queue = [rootId];
+  while (queue.length > 0) {
+    const currentId = queue.shift() as string;
+    const current = pages.find((page) => page.id === currentId);
+    if (!current || !include(current)) continue;
+    ids.push(current.id);
+    queue.push(...pages.filter((page) => page.parent_id === current.id).map((page) => page.id));
+  }
+  return ids;
+}
+
+export type PageArchiveResult = { ok: true; affected: number } | { ok: false; error: string };
+
+export const archivePage = authenticatedAction(async ({ supabase }, pageId: string): Promise<PageArchiveResult> => {
+  const workspaceId = await getCurrentWorkspaceId(supabase);
+  const { data: pages, error: pagesError } = await supabase
+    .from("pages")
+    .select("id, parent_id, archived_at")
+    .eq("workspace_id", workspaceId);
+  if (pagesError) throw pagesError;
+
+  const target = pages?.find((page) => page.id === pageId);
+  if (!target) return { ok: false, error: "Page not found." };
+  if (target.archived_at) return { ok: true, affected: 0 };
+
+  const ids = collectDescendantIds(pages ?? [], pageId, (page) => !page.archived_at);
+  const archivedAt = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("pages")
+    .update({ archived_at: archivedAt, pinned_at: null })
+    .in("id", ids)
+    .is("archived_at", null)
+    .select("id");
+  if (error) throw error;
+
+  revalidatePath("/", "layout");
+  return { ok: true, affected: data?.length ?? 0 };
+});
+
+export const restorePage = authenticatedAction(async ({ supabase }, pageId: string): Promise<PageArchiveResult> => {
+  const workspaceId = await getCurrentWorkspaceId(supabase);
+  const { data: pages, error: pagesError } = await supabase
+    .from("pages")
+    .select("id, parent_id, archived_at")
+    .eq("workspace_id", workspaceId);
+  if (pagesError) throw pagesError;
+
+  const target = pages?.find((page) => page.id === pageId);
+  if (!target) return { ok: false, error: "Page not found." };
+  if (!target.archived_at) return { ok: true, affected: 0 };
+
+  const archivedAt = target.archived_at;
+  const ids = collectDescendantIds(pages ?? [], pageId, (page) => page.archived_at === archivedAt);
+  const { data, error } = await supabase
+    .from("pages")
+    .update({ archived_at: null })
+    .in("id", ids)
+    .eq("archived_at", archivedAt)
+    .select("id");
+  if (error) throw error;
+
+  revalidatePath("/", "layout");
+  return { ok: true, affected: data?.length ?? 0 };
 });

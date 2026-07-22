@@ -91,8 +91,9 @@ export function NotesDrawer({
         <div className="space-y-3 border-t border-border pb-3 pt-3">
           {notes.length === 0 ? (
             <p className="py-6 text-[14px] text-ink-faint">Nothing has landed here yet. Capture a thought with #{pageTag} to start this page.</p>
-          ) : notes.map((note) => (
-            <div key={note.id} className="flex flex-col gap-1">
+          ) : notes.map((note) => {
+            const busy = pinning === note.id || deleting === note.id;
+            return <div key={note.id} className="flex flex-col gap-1">
               <NoteCard
                 body={note.body}
                 createdAt={note.created_at}
@@ -100,21 +101,21 @@ export function NotesDrawer({
                 pinned={Boolean(note.pinned_at)}
                 footer={
                   <>
-                    <button type="button" onClick={() => void handleTogglePin(note)} disabled={pinning === note.id} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
-                      {note.pinned_at ? "Unpin" : "Pin"}
+                    <button type="button" onClick={() => void handleTogglePin(note)} disabled={busy} className="text-amber-ink hover:text-amber-hover disabled:opacity-60">
+                      {pinning === note.id ? "Working…" : note.pinned_at ? "Unpin" : "Pin"}
                     </button>
-                    <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} className="text-ink-secondary hover:text-ink">
+                    <button type="button" onClick={() => openEdit({ id: note.id, body: note.body })} disabled={busy} className="text-ink-secondary hover:text-ink disabled:opacity-60">
                       Edit
                     </button>
-                    <button type="button" onClick={() => void handleDelete(note.id)} disabled={deleting === note.id} className="text-ink-secondary hover:text-ink disabled:opacity-60">
+                    <button type="button" onClick={() => void handleDelete(note.id)} disabled={busy} className="text-ink-secondary hover:text-ink disabled:opacity-60">
                       {deleting === note.id ? "Deleting…" : "Delete"}
                     </button>
                   </>
                 }
               />
               {errors[note.id] && <p className="pt-1 text-[11.5px] text-red-600">{errors[note.id]}</p>}
-            </div>
-          ))}
+            </div>;
+          })}
         </div>
       )}
     </section>

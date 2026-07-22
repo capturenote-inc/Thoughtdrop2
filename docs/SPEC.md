@@ -1,7 +1,7 @@
 # SPEC.md — ThoughtDrop
 
 ```
-version: 1.13
+version: 1.14
 status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
@@ -25,6 +25,9 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   v1.13 makes the authenticated shell responsive, makes Capture keyboard-safe
   and failure-resilient, and replaces immediate note/task deletion with
   server-backed soft deletion plus Undo.
+  v1.14 makes Page removal reversible through archive/restore, keeps archived
+  hierarchies and their notes intact, excludes archived pages from routing and
+  active navigation, and adds editable title-derived tag suggestions.
 ```
 
 ## Problem statement
@@ -57,7 +60,7 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
 
-- **Page**: a topic container identified by a globally unique hashtag (e.g. `#marketing`). Pages nest up to **three levels deep**. Nesting is represented by a `parent_id` reference on the page; tag uniqueness is enforced by a database unique constraint. Because tags are globally unique, nesting is organizational only and never affects routing. Each page has a **color** chosen from a fixed palette (user-picked at create/edit, default amber); the page's tag pill renders in that color wherever it appears. Unmatched tags (no owning page) always render in the default amber treatment.
+- **Page**: a topic container identified by a globally unique hashtag (e.g. `#marketing`). Pages nest up to **three levels deep**. Nesting is represented by a `parent_id` reference on the page; tag uniqueness is enforced by a database unique constraint. Because tags are globally unique, nesting is organizational only and never affects routing. Each page has a **color** chosen from a fixed palette (user-picked at create/edit, default amber); the page's tag pill renders in that color wherever it appears. Unmatched tags (no owning active page) always render in the default amber treatment. Page creation suggests a normalized tag from the title, but the suggestion remains editable. Archiving a page archives its currently active descendants in the same operation, removes them from navigation and routing, and retains their notes and hierarchy for restoration from Pages or the immediate Undo action.
 - **Note**: a captured thought containing zero or more hashtags. The UI keeps
   its routing context, capture time, and available actions with its body so it
   reads as a meaningful object rather than an anonymous text row. Capture and
@@ -69,10 +72,12 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
   Deleting a note is recoverable: the row is soft-deleted, disappears from
   active views, and can be restored from the immediate Undo action.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
-- **Deletion**: notes and tasks use a nullable `deleted_at` timestamp. Active
+- **Deletion and archive**: notes and tasks use a nullable `deleted_at` timestamp. Active
   product queries exclude deleted rows. The immediate mutation result offers
   an eight-second Undo action that clears `deleted_at`; permanent purge and a
-  trash view are separate future decisions.
+  trash view are separate future decisions. Pages use `archived_at` instead:
+  archived pages remain recoverable and their tags stay reserved, but they do
+  not receive new routed notes until restored.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.
 - **Routing**: any note containing `#tag` is automatically placed on the page owning that tag, per the rules below.
 

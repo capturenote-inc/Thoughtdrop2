@@ -21,13 +21,14 @@ export default async function Today() {
   const workspaceId = await getCurrentWorkspaceId(supabase);
 
   const [{ data: pages }, { data: recentNotes }, { data: openTasks }, { count: inboxCount }] = await Promise.all([
-    supabase.from("pages").select("id, tag, title, color, pinned_at").eq("workspace_id", workspaceId).order("title"),
-    supabase.from("notes").select("id, body, created_at, page_id, pinned_at").eq("workspace_id", workspaceId).is("deleted_at", null).order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(5),
+    supabase.from("pages").select("id, tag, title, color, pinned_at").eq("workspace_id", workspaceId).is("archived_at", null).order("title"),
+    supabase.from("notes").select("id, body, created_at, page_id, pinned_at").eq("workspace_id", workspaceId).is("deleted_at", null).order("pinned_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(20),
     supabase.from("tasks").select("id, title, due_date, priority").eq("workspace_id", workspaceId).is("deleted_at", null).neq("status", "done").order("due_date", { ascending: true, nullsFirst: false }).limit(4),
     supabase.from("notes").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).is("deleted_at", null).is("page_id", null),
   ]);
 
   const pageById = new Map((pages ?? []).map((page) => [page.id, page]));
+  const visibleRecentNotes = (recentNotes ?? []).filter((note) => !note.page_id || pageById.has(note.page_id)).slice(0, 5);
   const pinnedPages = (pages ?? []).filter((page) => page.pinned_at).sort((a, b) => (a.pinned_at as string).localeCompare(b.pinned_at as string));
   const date = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(new Date());
 
@@ -47,10 +48,10 @@ export default async function Today() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <div><p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-ink">Momentum</p><h2 className="mt-1 text-[20px] font-semibold tracking-[-0.025em] text-ink">Recently captured</h2></div>
-            {recentNotes && recentNotes.length > 0 && <span className="font-mono text-[11px] text-ink-faint">latest 5</span>}
+            {visibleRecentNotes.length > 0 && <span className="font-mono text-[11px] text-ink-faint">latest 5</span>}
           </div>
           <div className="space-y-2">
-            {recentNotes?.length ? recentNotes.map((note) => {
+            {visibleRecentNotes.length ? visibleRecentNotes.map((note) => {
               const page = note.page_id ? pageById.get(note.page_id) : undefined;
               const palette = page ? PAGE_COLORS[resolvePageColor(page.color)] : null;
               return (

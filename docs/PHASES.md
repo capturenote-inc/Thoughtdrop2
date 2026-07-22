@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.10
+version: 1.11
 status: exploratory
-inputs: SPEC.md v1.13, DESIGN.md v1.0, BACKLOG.md v1.1
+inputs: SPEC.md v1.14, DESIGN.md v1.0, BACKLOG.md v1.2
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -131,6 +131,12 @@ progress:
     Undo. Add guarded authenticated Playwright coverage for routing, undo,
     focus, and 320–1440px overflow. Verify schema and mutations on the
     data-free `codex-hardening-e2e` Supabase branch before production rollout.
+  - Page trust follow-up (2026-07-22): add reversible Page archive/restore,
+    cascade the archive timestamp through active descendants while retaining
+    their notes, exclude archived pages from navigation and routing, expose an
+    Archived section in Pages, improve create-page validation and editable tag
+    suggestions, and make the color palette Escape-dismissible with focus
+    restoration. Extend guarded browser coverage across all of these paths.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)

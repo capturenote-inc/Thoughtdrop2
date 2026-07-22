@@ -15,13 +15,14 @@ export default async function PageView({ params }: { params: Promise<{ tag: stri
     .select("id, tag, title, parent_id, color, pinned_at")
     .eq("workspace_id", workspaceId)
     .eq("tag", tag)
+    .is("archived_at", null)
     .maybeSingle();
 
   if (!page) notFound();
 
   const [{ data: parent }, { data: notes }] = await Promise.all([
     page.parent_id
-      ? supabase.from("pages").select("title").eq("id", page.parent_id).maybeSingle()
+      ? supabase.from("pages").select("title").eq("id", page.parent_id).is("archived_at", null).maybeSingle()
       : Promise.resolve({ data: null }),
     supabase
       .from("notes")

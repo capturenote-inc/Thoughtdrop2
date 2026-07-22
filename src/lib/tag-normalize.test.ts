@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidTag, normalizeTagInput } from "@/lib/tag-normalize";
+import { isValidTag, normalizeTagInput, suggestTagFromTitle } from "@/lib/tag-normalize";
 
 describe("normalizeTagInput", () => {
   it("trims whitespace", () => {
@@ -70,5 +70,17 @@ describe("isValidTag", () => {
     const tag = "a" + "b".repeat(64);
     expect(tag).toHaveLength(65);
     expect(isValidTag(tag)).toBe(false);
+  });
+});
+
+describe("suggestTagFromTitle", () => {
+  it("turns a title into an editable valid tag", () => {
+    expect(suggestTagFromTitle("Deep Marketing Plan")).toBe("deep-marketing-plan");
+    expect(suggestTagFromTitle("2026 Ideas")).toBe("page-2026-ideas");
+    expect(suggestTagFromTitle("Café & Notes")).toBe("cafe-notes");
+  });
+
+  it("returns an empty suggestion when no supported characters exist", () => {
+    expect(suggestTagFromTitle("✨✨")).toBe("");
   });
 });

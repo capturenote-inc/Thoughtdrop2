@@ -117,12 +117,12 @@ export function TaskList({ tasks }: { tasks: TaskRow[] }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input value={title} onChange={(event) => setTitle(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") create(); }} placeholder="Add a task…" aria-label="New task title" disabled={creating} className="h-10 min-w-0 flex-1 bg-transparent px-2 text-[15px] text-ink outline-none placeholder:text-ink-ghost" />
           <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_auto] items-center gap-2 sm:flex">
-            <select value={priority} onChange={(event) => setPriority(event.target.value as TaskPriority)} aria-label="New task priority" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
-            <input type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} aria-label="New task due date" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none" />
-            <button type="button" onClick={create} disabled={!title.trim() || creating} className="h-8 rounded-lg bg-ink px-3 text-[12px] font-semibold text-bg hover:bg-ink-body disabled:opacity-50">Add</button>
+            <select value={priority} onChange={(event) => setPriority(event.target.value as TaskPriority)} disabled={creating} aria-label="New task priority" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none disabled:opacity-60"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+            <input type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} disabled={creating} aria-label="New task due date" className="h-8 rounded-lg border border-border bg-bg px-2 text-[11px] text-ink-secondary outline-none disabled:opacity-60" />
+            <button type="button" onClick={create} disabled={!title.trim() || creating} className="h-8 rounded-lg bg-ink px-3 text-[12px] font-semibold text-bg hover:bg-ink-body disabled:opacity-50">{creating ? "Adding…" : "Add"}</button>
           </div>
         </div>
-        {error && <p className="px-2 pt-2 text-[11.5px] text-red-600">{error}</p>}
+        {error && <p role="alert" className="px-2 pt-2 text-[11.5px] text-red-600">{error}</p>}
       </div>
 
       <div className="mt-9 max-w-3xl">

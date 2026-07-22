@@ -34,6 +34,47 @@ test("capture to Inbox to Page with recoverable deletion", async ({ page }) => {
   await page.getByRole("button", { name: "Undo" }).click();
   await expect(page.getByText("Note restored.")).toBeVisible();
   await expect(page.getByText(body, { exact: true })).toBeVisible();
+
+  const colorButton = page.getByRole("button", { name: "Color" });
+  await colorButton.click();
+  await expect(page.getByRole("group", { name: "Page color" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("group", { name: "Page color" })).toBeHidden();
+  await expect(colorButton).toBeFocused();
+
+  await page.getByRole("button", { name: "Archive" }).click();
+  await expect(page).toHaveURL(/\/pages$/);
+  await expect(page.getByText(`${tag} archived.`)).toBeVisible();
+  await page.getByRole("button", { name: "Undo" }).click();
+  await expect(page.getByText(`${tag} restored.`)).toBeVisible();
+});
+
+test("new page form validates and suggests an editable routing tag", async ({ page }) => {
+  const suffix = Date.now().toString(36);
+  const title = `E2E Planning ${suffix}`;
+  const expectedTag = `e2e-planning-${suffix}`;
+
+  await page.goto("/pages?new=1");
+  await page.getByRole("button", { name: "Create page" }).click();
+  await expect(page.getByText("Add a page title.")).toBeVisible();
+  await expect(page.getByLabel("Title")).toBeFocused();
+
+  await page.getByLabel("Title").fill(title);
+  await expect(page.getByLabel("Routing tag")).toHaveValue(expectedTag);
+  await expect(page.getByText("Suggested from the title. You can edit it.")).toBeVisible();
+  await page.getByRole("button", { name: "Create page" }).click();
+  await expect(page.getByRole("link", { name: new RegExp(title) }).first()).toBeVisible();
+
+  const childTitle = `Nested ${suffix}`;
+  await page.getByRole("button", { name: "New page" }).click();
+  await page.getByLabel("Title").fill(childTitle);
+  await page.getByLabel("Parent").selectOption({ label: title });
+  await page.getByRole("button", { name: "Create page" }).click();
+  await page.getByRole("link", { name: new RegExp(`^${title}`) }).first().click();
+  await page.getByRole("button", { name: "Archive" }).click();
+  await expect(page.getByText(`${title} and 1 nested pages archived.`)).toBeVisible();
+  await page.getByRole("button", { name: "Undo" }).click();
+  await expect(page.getByText(`${title} restored.`)).toBeVisible();
 });
 
 test("Capture traps focus and restores it to its opener", async ({ page }) => {

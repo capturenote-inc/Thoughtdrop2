@@ -43,6 +43,7 @@ export async function routeNote(supabase: SupabaseClient, note: NoteRow): Promis
       .select("id")
       .eq("workspace_id", note.workspace_id)
       .eq("tag", newLeftmostTag)
+      .is("archived_at", null)
       .maybeSingle();
     matchedPageId = data?.id ?? null;
   }

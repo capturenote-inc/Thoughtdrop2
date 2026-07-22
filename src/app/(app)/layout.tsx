@@ -13,6 +13,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       .from("pages")
       .select("id, tag, title, parent_id, depth, color, pinned_at")
       .eq("workspace_id", workspaceId)
+      .is("archived_at", null)
       .order("title"),
     supabase
       .from("notes")

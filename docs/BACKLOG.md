@@ -1,7 +1,7 @@
 # BACKLOG.md — ThoughtDrop
 
 ```
-version: 1.1
+version: 1.2
 status: active
 source: live production review, 2026-07-22
 purpose: a product and engineering backlog for the next planning decision.
@@ -276,3 +276,21 @@ above after deployment before marking any related backlog item complete.
 - Browser verification passed on the data-free `codex-hardening-e2e` Supabase
   branch. The temporary branch and credentials were deleted after the run, so
   no ongoing branch cost remains and production data stayed out of scope.
+
+## Claude triage implementation — 2026-07-22
+
+- **Reliability investigation:** not reproduced. Vercel reports no 5xx runtime
+  requests in the inspected 24-hour window. Supabase shows stale or invalid
+  localhost session IDs, but no evidence that a valid live session was revoked.
+  Keep the incident open for a request ID and exact deployment if it recurs.
+- **Mutation state:** note, page, task, pin, color, archive, restore, and Inbox
+  triage controls now disable conflicting actions and show local pending text.
+- **Page archive:** implemented as reversible `archived_at`, including active
+  descendants. Notes and hierarchy remain intact; archived pages leave active
+  navigation and routing and are restorable from Pages or immediate Undo.
+- **Page creation:** blank submission now shows field-level guidance and focuses
+  the first invalid field. A valid routing tag is suggested from the title,
+  stays editable, and uses a neutral example when empty.
+- **Overlay keyboard behavior:** Escape closes the page color palette and
+  returns focus to its trigger. Guarded browser coverage exercises validation,
+  tag suggestion, palette dismissal, archive, and restore.
