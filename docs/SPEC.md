@@ -1,7 +1,7 @@
 # SPEC.md — ThoughtDrop
 
 ```
-version: 1.10
+version: 1.12
 status: exploratory
 changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   schema adds pages.color). v1.6 accepts pinned pages into MVP from the
@@ -19,7 +19,9 @@ changed: v1.5 added page colors (fixed palette, user-picked, default amber;
   note pins that sort important notes first in their Page or Inbox. v1.11
   establishes an original ThoughtDrop owl mark as the product identity,
   inspired by the idea of a quiet thinking companion without reusing the
-  Codex companion artwork.
+  Codex companion artwork. v1.12 develops that identity into an owl actively
+  holding a note and unifies Capture and rendered notes around a quiet paper
+  surface with no accent-colored composer frame.
 ```
 
 ## Problem statement
@@ -43,8 +45,8 @@ The Pages rail exposes the real parent/child hierarchy and provides distinct
 navigation to Pages and to create a new page. Pinned pages appear in a
 dedicated quick-access section above the tree.
 ThoughtDrop uses an original compact owl mark in the navigation rail: warm,
-observant, and notebook-adjacent in spirit while remaining visually distinct
-from any third-party mascot.
+observant, and holding a small written note while remaining visually distinct
+from any third-party mascot. The same mark appears at sign-in.
 Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
 
 ## Core concepts
@@ -54,7 +56,9 @@ Pages are wide-canvas (roughly 2–3x Notion width), infinite vertical length.
   its routing context, capture time, and available actions with its body so it
   reads as a meaningful object rather than an anonymous text row. Capture and
   note presentation should feel like writing surfaces, not oversized terminal
-  dialogs or generic dashboard cards. A user may pin a note; pinned notes
+  dialogs or generic dashboard cards. Rendered notes use a quiet paper surface,
+  natural text spacing, and a folded-corner cue; Capture uses the same material
+  language without an accent-colored border. A user may pin a note; pinned notes
   persist and sort above unpinned notes within the current Page or Inbox.
 - **Task**: a first-class object with due date, priority, and status (todo / doing / done). **Tasks do not parse hashtags and are never auto-routed.** A task created inside a task-list block belongs to that page; a task created from the Inbox or global task view is unassigned (Inbox). Routing applies to notes only.
 - **Inbox**: the destination for every note without a tag or whose routing tag matches no existing page, and for unassigned tasks.

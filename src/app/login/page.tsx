@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/auth/actions";
+import { ThoughtdropMark } from "@/components/ThoughtdropMark";
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, undefined);
@@ -14,7 +15,12 @@ export default function LoginPage() {
         className="relative flex w-full max-w-md flex-col gap-5 rounded-xl border border-border-modal bg-bg-modal p-9 shadow-2xl"
       >
         <div className="mb-2">
-          <span className="mb-6 grid h-10 w-10 place-items-center rounded-xl bg-amber text-[17px] font-bold text-on-amber">T</span>
+          <div className="mb-7 flex items-center gap-3">
+            <span className="grid h-12 w-12 place-items-center rounded-[15px] border border-border bg-card-header text-ink shadow-sm">
+              <ThoughtdropMark className="h-10 w-10" />
+            </span>
+            <span className="text-[15px] font-semibold tracking-[-0.025em] text-ink">ThoughtDrop</span>
+          </div>
           <h1 className="text-[29px] font-semibold tracking-[-0.04em] text-ink">Welcome back.</h1>
           <p className="mt-2 text-[14px] text-ink-secondary">Your thoughts are waiting in their places.</p>
         </div>

@@ -26,6 +26,8 @@
   --color-rail-ink: var(--rail-ink);
   --color-rail-active: var(--rail-active);
   --color-scrim: var(--scrim);
+  --color-note-paper: var(--note-paper);
+  --color-note-paper-hover: var(--note-paper-hover);
 
   --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -56,6 +58,11 @@
   --rail-line: #e4e5e9;
   --rail-active: #e9eaee;
   --scrim: rgb(20 21 25 / 0.36);
+  --note-paper: #fffdf9;
+  --note-paper-hover: #fffaf2;
+  --note-fold: #eee7dc;
+  --note-edge: rgb(72 54 38 / 0.08);
+  --note-shadow: 0 1px 2px rgb(32 27 22 / 0.08), 0 8px 24px rgb(32 27 22 / 0.055);
 }
 
 html[data-theme="dark"] {
@@ -83,6 +90,11 @@ html[data-theme="dark"] {
   --rail-line: #292b32;
   --rail-active: #282a31;
   --scrim: rgb(0 0 0 / 0.66);
+  --note-paper: #1b1c20;
+  --note-paper-hover: #202126;
+  --note-fold: #2b2d33;
+  --note-edge: rgb(255 255 255 / 0.065);
+  --note-shadow: 0 1px 1px rgb(0 0 0 / 0.3), 0 10px 28px rgb(0 0 0 / 0.2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -111,6 +123,11 @@ html[data-theme="dark"] {
     --rail-line: #292b32;
     --rail-active: #282a31;
     --scrim: rgb(0 0 0 / 0.66);
+    --note-paper: #1b1c20;
+    --note-paper-hover: #202126;
+    --note-fold: #2b2d33;
+    --note-edge: rgb(255 255 255 / 0.065);
+    --note-shadow: 0 1px 1px rgb(0 0 0 / 0.3), 0 10px 28px rgb(0 0 0 / 0.2);
   }
 }
 
@@ -129,6 +146,38 @@ button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+textarea.capture-editor:focus,
+textarea.capture-editor:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.capture-paper {
+  background: var(--note-paper);
+  box-shadow: inset 0 0 0 1px var(--note-edge), var(--note-shadow);
+}
+
+.note-paper {
+  background: var(--note-paper);
+  box-shadow: inset 0 0 0 1px var(--note-edge), var(--note-shadow);
+}
+
+.note-paper:hover { background: var(--note-paper-hover); }
+.note-paper-pinned { box-shadow: inset 3px 0 0 var(--accent), inset 0 0 0 1px var(--note-edge), var(--note-shadow); }
+
+.note-paper::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(225deg, var(--app-bg) 0 48%, var(--note-fold) 49% 100%);
+  box-shadow: -1px 1px 1px var(--note-edge);
+  pointer-events: none;
 }
 
 ::selection { background: var(--accent-subtle); color: var(--ink); }

@@ -14,7 +14,7 @@ interface PageOption {
 }
 
 const TEXTAREA_STYLE =
-  "min-h-[156px] w-full resize-none whitespace-pre-wrap break-words px-6 py-5 text-[17px] leading-[1.7] font-sans";
+  "min-h-[184px] max-h-[56vh] w-full resize-none overflow-y-auto whitespace-pre-wrap break-words px-6 py-5 text-[17px] leading-[1.75] font-sans";
 
 function HighlightedDraft({ draft }: { draft: string }) {
   const segments = segmentNoteBody(draft);
@@ -111,12 +111,12 @@ export function CreateNoteModal({
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-scrim" onClick={onClose} />
-      <div className="absolute left-1/2 top-[14vh] w-[min(680px,calc(100vw-40px))] -translate-x-1/2 overflow-hidden rounded-2xl border border-border-modal bg-bg-modal shadow-2xl">
-        <div className="flex items-center justify-between px-6 pb-2 pt-5">
-          <span className="text-[13px] font-semibold text-ink">New thought</span>
+      <div className="absolute left-1/2 top-[12vh] w-[min(720px,calc(100vw-40px))] -translate-x-1/2 overflow-hidden rounded-[20px] border border-border-modal bg-bg-modal shadow-2xl">
+        <div className="flex items-center justify-between px-6 pb-3 pt-5">
+          <span className="text-[14px] font-semibold tracking-[-0.015em] text-ink">{editingNoteId ? "Edit note" : "New note"}</span>
           <span className="font-mono text-[10px] text-ink-faint">esc to close</span>
         </div>
-        <div className="relative mx-3 rounded-xl bg-card-header">
+        <div className="capture-paper relative mx-5 overflow-hidden rounded-[14px]">
           <div aria-hidden className={`${TEXTAREA_STYLE} pointer-events-none absolute inset-0 pb-0 text-ink`}>
             <HighlightedDraft draft={draft} />
           </div>
@@ -125,11 +125,12 @@ export function CreateNoteModal({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Write it down. A #tag gives it a home."
-            className={`${TEXTAREA_STYLE} relative bg-transparent text-transparent caret-amber outline-none placeholder:text-ink-ghost focus-visible:outline-none`}
+            className={`${TEXTAREA_STYLE} capture-editor relative bg-transparent text-transparent caret-amber placeholder:text-ink-ghost`}
+            style={{ outline: "none" }}
           />
         </div>
         {error && <p className="px-6 pt-2 text-[11.5px] text-red-600">{error}</p>}
-        <div className="mx-3 mb-3 mt-2 flex items-center gap-1.5 rounded-xl bg-card-header px-3 pb-3 pt-2 text-[12px]">
+        <div className="mx-5 mb-4 mt-3 flex min-h-10 items-center gap-1.5 text-[12px]">
           {!leftmostTag && <span className="text-ink-faint">No tag? It lands in your Inbox.</span>}
           {leftmostTag && matchedPage && (
             <span className="flex items-center gap-1.5 text-ink-secondary">
@@ -149,7 +150,7 @@ export function CreateNoteModal({
             type="button"
             onClick={() => void save()}
             disabled={saving || !draft.trim()}
-            className="flex h-9 items-center gap-1.5 rounded-lg bg-amber px-4 text-[12.5px] font-semibold text-on-amber hover:bg-amber-hover disabled:opacity-60"
+            className="flex h-9 items-center gap-1.5 rounded-[10px] bg-amber px-4 text-[12.5px] font-semibold text-on-amber shadow-sm hover:bg-amber-hover disabled:opacity-60"
           >
             Save
             <span className="font-mono text-[10px] font-normal opacity-75">⌘↵</span>

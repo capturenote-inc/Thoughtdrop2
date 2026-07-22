@@ -54,7 +54,7 @@ export default async function Today() {
               const page = note.page_id ? pageById.get(note.page_id) : undefined;
               const palette = page ? PAGE_COLORS[resolvePageColor(page.color)] : null;
               return (
-                <Link key={note.id} href={page ? `/pages/${page.tag}` : "/inbox"} className="group flex gap-4 rounded-lg border border-border bg-bg-card px-4 py-3.5 transition-colors hover:border-ink-ghost">
+                <Link key={note.id} href={page ? `/pages/${page.tag}` : "/inbox"} className="note-paper group relative flex overflow-hidden rounded-xl px-4 py-3.5 transition-transform hover:-translate-y-px">
                   <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: palette?.ink ?? "var(--color-amber)" }} />
                   <span className="min-w-0 flex-1"><span className="block truncate text-[14px] leading-6 text-ink-body group-hover:text-ink">{notePreview(note.body)}</span><span className="mt-1 block text-[11px] text-ink-faint">{page ? `#${page.tag} · ${page.title}` : "Inbox"}</span></span>
                   <span className="mt-1 shrink-0 font-mono text-[10.5px] text-ink-faint">{formatRelativeTime(note.created_at)}</span>

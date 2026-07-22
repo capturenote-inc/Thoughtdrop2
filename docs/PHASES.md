@@ -1,9 +1,9 @@
 # PHASES.md — ThoughtDrop
 
 ```
-version: 1.8
+version: 1.9
 status: exploratory
-inputs: SPEC.md v1.11, DESIGN.md v1.0
+inputs: SPEC.md v1.12, DESIGN.md v1.0
 consumer: implementation agents (phases are sequencing guides, not hard
   scope gates; Bryan may reorder, combine, or add work at any time)
 progress:
@@ -119,6 +119,12 @@ progress:
     around the writing area in both themes. Remove that frame entirely and
     retain only a quiet, neutral writing surface; the earlier focus-outline
     change did not address this separate border.
+  - Visual polish pass (2026-07-22): replace the first-pass owl with a more
+    expressive original mark that holds a written note and carry it into the
+    sign-in surface and browser icon. Remove the Capture textarea focus frame with an explicit
+    component rule, restyle Capture as quiet paper, and give rendered notes a
+    shared paper surface, folded-corner cue, natural line breaks, and clearer
+    pinned/meta hierarchy in light and dark themes.
 ```
 
 ## Architect defaults (binding unless Bryan overrides)
