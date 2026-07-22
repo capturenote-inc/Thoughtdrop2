@@ -249,13 +249,11 @@ choosing between Page composition, task refinement, or search.
     UI has no page deletion path. Do not silently remove them from production
     data outside an approved cleanup action.
 
-### Current-worktree caution
+### Deployment state
 
-The shared local worktree contains uncommitted changes that appear to address
-mobile navigation, recoverable note/task deletion, action-error handling,
-Capture focus, and browser testing. They are promising implementation work,
-not evidence that the deployed preview is fixed. Run the exact live-test cases
-above after deployment before marking any related backlog item complete.
+The responsive and mutation hardening is committed and deployed to the
+`codex/studio-desk` preview, with its functional checks passing on an isolated
+Supabase branch. Production promotion remains a separate release decision.
 
 ## Hardening slice progress — 2026-07-22
 
@@ -294,3 +292,9 @@ above after deployment before marking any related backlog item complete.
 - **Overlay keyboard behavior:** Escape closes the page color palette and
   returns focus to its trigger. Guarded browser coverage exercises validation,
   tag suggestion, palette dismissal, archive, and restore.
+- **Deployment identity:** `thoughtdrop2-git-codex-studio-desk-capturenote.vercel.app`
+  is the current preview. `thoughtdrop2.vercel.app` and the ThoughtDrop2 main
+  aliases still point at the older production deployment. `thoughtdrop.co`
+  points to a separate Vercel project named `thoughtdrop`, not this repo's
+  `thoughtdrop2` project. Choosing which project owns the custom domain and
+  promoting this branch remain explicit release decisions.
